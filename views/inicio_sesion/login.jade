@@ -1,0 +1,29 @@
+doctype html
+html(lang="es")
+	head 
+		title="Iniciar sesión"
+		link(href="/css/bootstrap.css" rel="stylesheet")
+		link(href="/css/bootstrap-theme.css" rel="stylesheet")
+	body(style="padding-top:80px;")
+		div(class="container")
+			div(class="col-sm-6 col-sm-offset-3")
+				h1
+					span(class="fa fa-sign-in") Iniciar sesión
+				if (message.length > 0)
+					div(class="alert alert-danger")=message
+				form(action="/login" method="post")
+					div(class="form-group")
+						label Usuario
+						select(name="usuario" class="form-control")
+							option(value="administrador") Administrador
+							option(value="contador") Contador
+							option(value="diseñador") Diseñador
+							option(value="empleado_mostrador") Empleado de mostrador
+					div(class="form-group")
+						label Contraseña
+						input(type="password" class="form-control" name="contraseña")
+					button(type="submit" class="btn btn-success btn-lg") Iniciar sesión
+				hr
+
+
+
