@@ -1,0 +1,11 @@
+{
+  "name": "sistema_ventas_versatil",
+  "version": "1.0.0",
+  "description": "Sistema de gestion de ventas versatil",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Francisco Blanco Romero",
+  "license": "ISC"
+}
