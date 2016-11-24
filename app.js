@@ -17,7 +17,7 @@ var router = express.Router();
 
 // root page
 router.get('/',function(req, res){
-	res.send("hola");
+	res.render('index');
 });
 
 app.use(router);

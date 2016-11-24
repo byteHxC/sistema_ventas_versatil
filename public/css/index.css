@@ -1,0 +1,50 @@
+html{
+	position: relative; 
+	min-height: 100%;
+}
+body{
+	background-image: url('/img/index-background.jpg');
+	background-size: cover;
+	position: relative;
+	font-family: 'Raleway', sans-serif;
+	margin: 0;
+  	margin-bottom: 40px;
+}
+.box-img{
+	background-color: white;
+	margin-top: 10em;
+	opacity: 0.5;
+	border-radius: 10px 10px 10px 10px;
+}
+.box{
+  	left: 0;
+ 	right: 0;
+ 	z-index: 9999;
+ 	margin-left: 20px;
+ 	margin-right: 20px;
+}
+img{
+	width: 500px;
+	height: 300px;
+}
+button{
+	margin-top: 1.5em;
+	margin-right: 1em;
+	border-radius: 129px 129px 129px 129px;
+	background: none;
+	border: 1px solid #ffffff;
+	color: white;
+	width: 8em;
+	height: 2em;
+	font-size: 18px;
+}
+.footer {
+	position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  margin-top: 5em;
+  padding: 0.1rem;
+  background-color: #efefef;
+  text-align: center;
+}
