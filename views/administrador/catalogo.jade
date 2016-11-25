@@ -1,0 +1,33 @@
+extends ../layout
+block content
+	style().
+		html{
+			background-color: #ffffff;
+		}
+	div(class="container")
+		div(class="panel panel-primary" style="margin-top:0.5em;")
+				div(class="panel-heading" style="background:#4e6073;")
+					h1(class="planel-title" style="font-size: 25px;text-align:center;") Catálogo de invitaciones
+				div(class="panel-body" style="background:#cccccc;")
+					div(class="row" style="margin-bottom:2em;")
+						button(class="button text-center")
+						img(src="/icons/plus-2.png" class="icon")
+						a(href="/catalogo/add" style="color:#333f4c;") Agregar nuevo modelo
+					div(class="row")
+						each modelo in modelos
+							div(class="col-md-4")
+								div(class="panel panel-default" style="border-radius: 12px 12px 12px 12px;")
+									div(class="panel-body center-block text-center")
+										img(src="#{modelo.ruta_imagen}" class="model")
+										br
+										br
+										strong Modelo: #{modelo.id_modelo}
+										br
+										strong Precio unitario: $ #{modelo.precio_unitario}
+										br
+										button(class="btn btn-warning dp" ) Editar
+										form(method="post" action="/catalogo/#{modelo.id_modelo}?_method=delete")
+											button( type="submit" class="btn btn-danger dp" name="id_modelo") Eliminar
+
+
+
