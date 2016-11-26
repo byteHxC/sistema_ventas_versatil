@@ -6,7 +6,7 @@ insert users (usuario,contraseña) values ('diseñador','sistemas123');
 insert users (usuario,contraseña) values ('administrador','sistemas123');
 insert users (usuario,contraseña) values ('contador','sistemas123');
 
-create table clientes(id_cliente int auto_increment primary key,nombre varchar(60) not null, telefono varchar(15) not null, coreeo varchar(360) not null, rfc varchar(13), curp varchar(18), calle varchar(40), no_ext int, no_int int, colonia varchar(40), codigo_postal int, localidad varchar(40), municipio varchar(40), estado varchar(40));
+create table clientes(id_cliente int auto_increment primary key,nombre varchar(60) not null, telefono varchar(15) not null, correo varchar(360) not null, rfc varchar(13), curp varchar(18), calle varchar(40), no_ext int, no_int int, colonia varchar(40), codigo_postal int, localidad varchar(40), municipio varchar(40), estado varchar(40));
 
 create table modelos(id_modelo int auto_increment primary key, precio_unitario float not null, ruta_imagen varchar(50), descripcion varchar(500));
 

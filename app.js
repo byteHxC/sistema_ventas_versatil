@@ -5,8 +5,9 @@ const express = require('express'),
 	passport = require('passport'),
 	flash = require('connect-flash'),
 	session = require('express-session'),
-    multer = require('multer')
-    upload = multer({dest: './uploads/'});
+    multer = require('multer'),
+    upload = multer({dest: './uploads/'}),
+    request = require('request');
 
 // connector myssql
 const connectionMySql = require('./config/database.js')
@@ -40,7 +41,7 @@ router.get('/',function(req, res){
 router.route('/login')
 	.get(notIsLoggedIn,function(req, res){
 		res.render('inicio_sesion/login',{ message: req.flash('loginMessage')});
-	})
+    })
 	.post(passport.authenticate('local-login', {
         successRedirect : '/redirect_user', // redirect to the secure profile section
         failureRedirect : '/login', // redirect back to the signup page if there is an error
@@ -118,7 +119,7 @@ router.route('/catalogo/:id_modelo')
         });
     })
     .delete(isLoggedIn, function(req, res){
-        console.log(' delete ' + req.params.id_modelo)
+        console.log('delete' + req.params.id_modelo)
         connectionMySql.query('DELETE from modelos where id_modelo=?',[req.params.id_modelo], function(error){
             if(error){
                 console.log(error.message);
@@ -128,15 +129,151 @@ router.route('/catalogo/:id_modelo')
         });
     });
 
+router.get('/catalogo_selected/', isLoggedIn, function(req, res){
+    connectionMySql.query("SELECT * FROM `modelos`",function(err,rows){
+        console.log('GET /catalogo_selected/')
+        var data = [{
+                id_cliente: '',
+                nombre: '',
+                correo: '',
+                telefono: ''
+            }];
+        var json = JSON.parse(JSON.stringify(rows));
+        // console.log(json)
+        res.render('empleado_mostrador/showCatalogo',{cliente: data, modelos: json});
+    });  
+});
+router.get('/catalogo_selected/:filtro/:valor/', isLoggedIn, function(req, res){
+    console.log('GET /catalogo_selected/:filtro/:valor')
+    console.log('-<<'+req.params.filtro);
+    console.log('-<<'+req.params.valor);
+    console.log('-<<'+req.params);
+    if(req.params.filtro == 'precio'){
+        connectionMySql.query('SELECT * FROM modelos WHERE precio_unitario > ? and precio_unitario < ?;',[parseInt(req.params.valor)-10,parseInt(req.params.valor)+10 ],function(error, rows){
+            if(error){
+                console.log(error.message);
+            }else{
+               var json = JSON.parse(JSON.stringify(rows));
+                res.render('empleado_mostrador/showCatalogo',{modelos: json});
+            }
+        });
+    }else if (req.params.filtro == 'modelo'){
+        connectionMySql.query('SELECT * FROM modelos WHERE id_modelo LIKE "%'+req.params.valor+'%"',[req.params.valor],function(error, rows){
+            if(error){
+                console.log(error.message);
+            }else{
+                var json = JSON.parse(JSON.stringify(rows));
+                res.render('empleado_mostrador/showCatalogo',{modelos: json});
+            }
+         });
+    }else{
+        res.redirect('/error');
+    }
+    
+});
+
 // MARK: - Rutas pedidos
 router.route('/pedido/add')
     .get(isLoggedIn, function(req, res){
         console.log('GET /pedido/add');
-        res.render('empleado_mostrador/add_pedido');
+        var data = [{
+            id_cliente: '',
+            nombre: '',
+            correo: '',
+            telefono: ''
+        }];
+        var modelos = {};
+        res.render('empleado_mostrador/add_pedido', {cliente: data, modelos: modelos});
     })
     .post(isLoggedIn, function(req, res){
         console.log('POST /pedido/add');
+        console.log(req.body.table)
+        console.log(req.body)
     });
+
+// MARK: - Agregar cliente
+router.route('/cliente/add')
+    .get(isLoggedIn, function(req, res){
+        console.log('GET /cliente/add');
+        res.render('empleado_mostrador/addCliente');
+    })
+    .post(isLoggedIn, function(req, res){
+        console.log('POST /cliente/add');
+        var data = [req.body.nombre, req.body.telefono, req.body.correo, req.body.rfc, req.body.curp, req.body.calle, req.body.no_ext || null, req.body.no_int || null,req.body.colonia, req.body.codigo_postal || null, req.body.localidad, req.body.municipio, req.body.estado];
+        // console.log(data);
+        connectionMySql.query('INSERT INTO `clientes` (nombre, telefono, correo, rfc, curp, calle, no_ext, no_int, colonia, codigo_postal, localidad, municipio, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', data, function(error,result,fields){
+            if(error){
+                console.log(error.message);
+            }else{
+                connectionMySql.query('SELECT * FROM clientes where id_cliente = ?', [result.insertId], function(error, rows){
+                    if(error){
+                        console.log(error.message);
+                    }else{
+                       var json = JSON.parse(JSON.stringify(rows));
+                        res.render('empleado_mostrador/add_pedido', {cliente: json});
+                    }
+                });
+            }
+        });
+    });
+
+router.get('/clientes', isLoggedIn, function(req, res){
+    connectionMySql.query('SELECT * FROM clientes',function(error, rows){
+        if(error){
+            console.log(error.message);
+        }else{
+           var json = JSON.parse(JSON.stringify(rows));
+            res.render('empleado_mostrador/showClientes', {clientes: json});
+        }
+    });
+});
+router.get('/clientes/:nombre', isLoggedIn, function(req, res){
+    console.log('GET /clientes/:nombre ->' + req.params.nombre)
+    connectionMySql.query('SELECT * FROM clientes WHERE nombre LIKE "%'+req.params.nombre+'%" ',function(error, rows){
+        if(error){
+            console.log(error.message);
+        }else{
+           var json = JSON.parse(JSON.stringify(rows));
+            res.render('empleado_mostrador/showClientes', {clientes: json});
+        }
+    });
+});
+router.get('/clienteSeleccionado/:id_cliente', isLoggedIn, function(req, res){
+    connectionMySql.query('SELECT * FROM clientes where id_cliente = ?', [req.params.id_cliente], function(error, rows){
+        if(error){
+            console.log(error.message);
+        }else{
+            var json = JSON.parse(JSON.stringify(rows));
+            var modelos = {}
+            res.render('empleado_mostrador/add_pedido', {cliente: json, modelos: modelos});
+        }
+    });
+});
+router.get('/modelosSeleccionados/:modelos/', isLoggedIn, function(req, res){
+    console.log('GET /modelosSeleccionados/:modelos/ ->' + req.params.modelos);
+    modelos = req.params.modelos.split(',');
+    var sql = 'SELECT * FROM modelos WHERE id_modelo = ' + modelos[0] || null;
+    
+    for (var i = 1; i < modelos.length; i++) {
+        sql += ' or id_modelo = ' + modelos[i];
+    }
+    connectionMySql.query(sql,function(error, rows){
+        if(error){
+            console.log(error.message);
+        }else{
+           var json = JSON.parse(JSON.stringify(rows));
+           var data = [{
+                id_cliente: '',
+                nombre: '',
+                correo: '',
+                telefono: ''
+            }];
+           // console.log(json);
+           res.render('empleado_mostrador/add_pedido', {cliente: data, modelos: json})
+        }
+    });
+});
+
 
 app.use(router);
 app.use(function(req, res){
@@ -148,6 +285,7 @@ app.use(function(req, res){
 app.listen(3000,function () {
 	console.log('Node server running on http://127.0.0.1:3000/')
 });
+
 
 function isLoggedIn(req, res, next) {
     // if user is authenticated in the session, carry on 

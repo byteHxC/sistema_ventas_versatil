@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.15.2",
+    "bootbox": "^4.4.0",
     "connect-flash": "^0.1.1",
     "express": "^4.14.0",
     "express-session": "^1.14.2",
@@ -18,6 +19,8 @@
     "multer": "^1.2.0",
     "mysql": "^2.12.0",
     "passport": "^0.3.2",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "request": "^2.79.0",
+    "window-popup": "^1.0.1"
   }
 }

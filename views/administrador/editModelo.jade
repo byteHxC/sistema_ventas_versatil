@@ -10,7 +10,7 @@ block content
 					h1(class="planel-title" style="font-size: 25px;text-align:center;") Editar modelo
 				div(class="panel-body" style="background:#f2f2f2;")
 						div(class="text-center")
-							img(src="b40f0e746e2d50253fad0000c79265e9" class="model"  style="margin-bottom:2em; width:230px; height:230px;")
+							img(src="../#{modelo[0].ruta_imagen}" class="model"  style="margin-bottom:2em; width:230px; height:230px;")
 						form(method="post" action="/catalogo/#{modelo[0].id_modelo}?_method=put" class="form-horizontal")
 							div(class="form-group")
 								label(for="Modelo" class="col-sm-2 control-label") Modelo:
@@ -28,6 +28,6 @@ block content
 								label(class="col-sm-2")
 								div(class="col-sm-3")
 									button(type="submit" class="btn btn-success")
-										span(class="glyphicon glyphicon-plus-sign fo") Actualizar
-									a(href="/catalogo" class="btn btn-danger") Cancelar
-										span(class="glyphicon glyphicon-remove-sign")
+										span(class="fa fa-pencil-square-o" aria-hidden="true" )  Actualizar
+									a(href="/catalogo" class="btn btn-danger")
+										span(class="fa fa-times-circle")  Cancelar

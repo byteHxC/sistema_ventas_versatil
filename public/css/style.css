@@ -3,14 +3,14 @@ html{
 	background-color: #333F4D;
 }
 .footer {
-position: fixed;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  margin-top: 5em;
-  padding: 0.1rem;
-  background-color: #efefef;
-  text-align: center;
+	position: fixed;
+  	right: 0;
+  	bottom: 0;
+  	left: 0;
+  	margin-top: 5em;
+  	padding: 0.1rem;
+  	background-color: #efefef;
+  	text-align: center;
 }
 
 a{
@@ -64,4 +64,8 @@ button{
 }
 span{
 	font-family: 'Raleway', sans-serif;
+}
+.font18ligth{
+	font-family: 'Raleway', sans-serif;
+	font-size: 16px;
 }
