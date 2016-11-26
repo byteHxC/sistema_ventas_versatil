@@ -78,12 +78,12 @@ router.get('/catalogo',isLoggedIn, function(req, res){
 
 router.route('/catalogo/add')
     .get(isLoggedIn, function(req, res){
+        console.log('GET /catalogo/add')
         res.render('administrador/addModelo')
     })
     .post(isLoggedIn,upload.single('imagen'),function(req, res){
-        console.log(req.file)
-        console.log(req.body);
-        var data = [parseInt(req.body.precio_unitario),req.file.path,req.body.descripcion];
+        console.log("POST /catalogo/add");
+        var data = [parseInt(req.body.precio_unitario),req.file.filename,req.body.descripcion];
         connectionMySql.query('INSERT INTO `modelos` (`precio_unitario`, `ruta_imagen`, `descripcion`) VALUES (?, ?, ?)', data, function(error){
             if(error){
                 console.log(error.message);
@@ -95,7 +95,26 @@ router.route('/catalogo/add')
 
 router.route('/catalogo/:id_modelo')
     .get(isLoggedIn, function(req, res){
-        
+        console.log('GET this '+req.params.id_modelo)
+        connectionMySql.query("SELECT * FROM `modelos` where id_modelo = ?",[req.params.id_modelo], function(err,rows){
+            var json = JSON.parse(JSON.stringify(rows));
+            // console.log(json)
+            res.render('administrador/editModelo', {modelo: json});
+            console.log('end')
+        }); 
+    })
+    .put(isLoggedIn, function(req, res){
+        console.log('UPDATE /catalogo/:id_modelo');
+        // console.log(req.body)
+        // console.log(req.params)
+        // console.log([req.body.descripcion,req.body.precio_unitario, req.params.id_modelo])
+        connectionMySql.query('UPDATE modelos set descripcion=?,precio_unitario=? where id_modelo = ?',[req.body.descripcion,req.body.precio_unitario, req.params.id_modelo], function(error){
+            if(error){
+                console.log(error.message);
+            }else{
+                res.redirect('/catalogo')
+            }
+        });
     })
     .delete(isLoggedIn, function(req, res){
         console.log(' delete ' + req.params.id_modelo)

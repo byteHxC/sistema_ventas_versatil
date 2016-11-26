@@ -17,7 +17,7 @@ block content
 						each modelo in modelos
 							div(class="col-md-4")
 								div(class="panel panel-default" style="border-radius: 12px 12px 12px 12px;")
-									div(class="panel-body center-block text-center")
+									div(class="panel-body  text-center")
 										img(src="#{modelo.ruta_imagen}" class="model")
 										br
 										br
@@ -25,9 +25,12 @@ block content
 										br
 										strong Precio unitario: $ #{modelo.precio_unitario}
 										br
-										button(class="btn btn-warning dp" ) Editar
-										form(method="post" action="/catalogo/#{modelo.id_modelo}?_method=delete")
+										form(method="post" action="/catalogo/#{modelo.id_modelo}?_method=delete" class="dp")
+											a(style='text-decoration:none;color:white;' href="/catalogo/#{modelo.id_modelo}" class="dp btn btn-warning") Editar
 											button( type="submit" class="btn btn-danger dp" name="id_modelo") Eliminar
+
+
+
 
 
 

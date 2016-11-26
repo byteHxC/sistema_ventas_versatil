@@ -1,0 +1,33 @@
+extends ../layout
+block content
+	style().
+		html{
+			background-color: #ffffff;
+		}
+	div(class="container")
+		div(class="panel panel-warning" style="margin-top:0.5em;")
+				div(class="panel-heading")
+					h1(class="planel-title" style="font-size: 25px;text-align:center;") Editar modelo
+				div(class="panel-body" style="background:#f2f2f2;")
+						div(class="text-center")
+							img(src="b40f0e746e2d50253fad0000c79265e9" class="model"  style="margin-bottom:2em; width:230px; height:230px;")
+						form(method="post" action="/catalogo/#{modelo[0].id_modelo}?_method=put" class="form-horizontal")
+							div(class="form-group")
+								label(for="Modelo" class="col-sm-2 control-label") Modelo:
+								div(class="col-sm-4")
+									input(type="number" class="form-control " name="id_modelo" placeholder="Numero de modelo" disabled value="#{modelo[0].id_modelo}")
+							div(class="form-group")
+								label(for="Descripcion" class="col-sm-2 control-label") Descripción:
+								div(class="col-sm-8")
+									textarea(rows="6" class="form-control " name="descripcion" placeholder="Ingrese la descripción del modelo" required ) #{modelo[0].descripcion}
+							div(class="form-group")
+								label(for="Precio unitario" class="col-sm-2 control-label") Precio unitario:
+								div(class="col-sm-4")
+									input(type="number" class="form-control " name="precio_unitario" placeholder="precio unitario" required value="#{modelo[0].precio_unitario}")
+							div(class="form-group")
+								label(class="col-sm-2")
+								div(class="col-sm-3")
+									button(type="submit" class="btn btn-success")
+										span(class="glyphicon glyphicon-plus-sign fo") Actualizar
+									a(href="/catalogo" class="btn btn-danger") Cancelar
+										span(class="glyphicon glyphicon-remove-sign")

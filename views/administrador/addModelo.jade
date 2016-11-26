@@ -13,7 +13,7 @@ block content
 							div(class="form-group")
 								label(for="Modelo" class="col-sm-2 control-label") Imagen:
 								div(class="col-sm-4")
-									input(type="file" class="form-control " name="imagen" required)
+									input(type="file" class="form-control " name="imagen" required accept=".jpg, .png, .jpeg, .gif, .bmp, .tif, .tiff|images/*")
 							div(class="form-group")
 								label(for="Modelo" class="col-sm-2 control-label") Modelo:
 								div(class="col-sm-4")
@@ -30,7 +30,8 @@ block content
 								label(class="col-sm-2")
 								div(class="col-sm-3")
 									button(type="submit" class="btn btn-success")
-										span(class="glyphicon glyphicon-plus-sign fo") Agregar
-									a(href="/catalogo" class="btn btn-danger") Cancelar
-										span(class="glyphicon glyphicon-remove-sign")
+										span(class="fa fa-plus-circle fo")   Agregar
+									a(href="/catalogo" class="btn btn-danger")
+										span(class="fa fa-times-circle")   Cancelar
+
 
