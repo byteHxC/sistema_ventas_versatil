@@ -55,9 +55,9 @@ router.get('/logout', function(req, res) {
 
 // - Redirijir segun el tipo de usuario
 router.get('/redirect_user',isLoggedIn,function(req, res){
-    // console.log(req.user.usuario);
+    console.log('GET /redirect_user -> '+req.user.usuario);
     if(req.user.usuario == 'empleado_mostrador'){
-
+        res.render('empleado_mostrador/principal');
     }else if(req.user.usuario == 'diseñador'){
 
     }else if(req.user.usuario == 'administrador'){
@@ -70,6 +70,7 @@ router.get('/redirect_user',isLoggedIn,function(req, res){
 // Gestion de catalogo
 router.get('/catalogo',isLoggedIn, function(req, res){
     connectionMySql.query("SELECT * FROM `modelos`",function(err,rows){
+        console.log('GET /catalogo/')
         var json = JSON.parse(JSON.stringify(rows));
         // console.log(json)
         res.render('administrador/catalogo',{modelos: json});
@@ -125,6 +126,16 @@ router.route('/catalogo/:id_modelo')
                 res.redirect('/catalogo')
             }
         });
+    });
+
+// MARK: - Rutas pedidos
+router.route('/pedido/add')
+    .get(isLoggedIn, function(req, res){
+        console.log('GET /pedido/add');
+        res.render('empleado_mostrador/add_pedido');
+    })
+    .post(isLoggedIn, function(req, res){
+        console.log('POST /pedido/add');
     });
 
 app.use(router);

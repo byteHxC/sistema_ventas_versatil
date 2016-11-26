@@ -1,0 +1,22 @@
+extends ../layout
+block content
+	style().
+		html{
+			background-color: #f2f2f2;
+		}
+	div(class="container-fluid")
+		div(class="row" style="background: #465669;")
+			div(class="col-md-3 text-center" style="background: #4e6075;") 
+				h2(style="color:white;") Versatil
+			div(class="col-md-9 text-center") 
+				h2(style="color:white;") Agregar pedido
+		div(class="row")
+			form(method="post" action="/pedido/add" class="form-horizontal")
+				div(class="form-group" style="margin-top:1em;")
+					label(for="no_folio" class="col-sm-2 control-label") No. Folio
+					div(class="col-sm-4")
+						input(type="number" class="form-control " name="no_folio" placeholder="Numero de folio" disabled)
+				div(class="form-group" style="margin-top:1em;")
+					label(for="fecha" class="col-sm-2 control-label") Fecha
+					div(class="col-sm-4")
+						input(type="date" class="form-control " name="fecha" placeholder="Fecha" disabled)

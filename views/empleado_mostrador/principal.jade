@@ -1,0 +1,15 @@
+extends ../layout
+block content
+	div(class="container-fluid")
+		div(class="row header text-center")
+			h1(style="color:white; font-size:2em;") Versatil - Empleado de mostrador
+		div(class="row contenido")
+			div(class="col-md-4 ")
+			div(class="col-md-4 center-block")
+				button(class="button text-center") 
+					img(src="/icons/package.png" class="icon")
+					a(href="/pedido/add") Agregar pedido
+				button(class="button text-center")
+					img(src="/icons/list.png" class="icon")
+					a(href="/catalogo") Lista de pedidos
+			div(class="col-md-4")
