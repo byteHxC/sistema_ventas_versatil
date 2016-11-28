@@ -1,0 +1,128 @@
+extends ../layout
+block content
+	style().
+		html{
+			background-color: #f2f2f2;
+		}
+	script(src="../../js/validators.js")
+	script(src="../../js/parseTable.js")
+	script(src="../../../js/parseTable.js")
+	script(src="../../../js/validators.js")
+	script(src="node_modules/jquery/dist/jquery.min.js")
+	div(class="container-fluid")
+		div(class="row" style="background: #465669;margin-bottom:2em;" )
+			div(class="col-md-3 text-center" style="background: #4e6075;") 
+				h2(style="color:white;") Versatil - Contador
+			div(class="col-md-9 text-center") 
+				h2(style="color:white;") Información de pedido
+		div(class="container" )
+			div(class="panel panel-default" )
+				div(class="panel-heading")
+					h4 Datos del cliente
+				div(class="panel-body form-horizontal")
+					div(class="form-group" )
+						label(for="Nombre cliente" class="col-sm-2 control-label") Nombre completo*:
+						div(class="col-sm-10")
+							input(type="text" class="form-control " name="nombre" placeholder="Nombre completo" readonly)
+					div(class="form-group")
+						label(for="correo cliente" class="col-sm-2 control-label") Correo*:
+						div(class="col-sm-4")
+							input(type="email" class="form-control " name="correo" placeholder="Correo" readonly)
+						label(for="telefono" class="col-sm-2 control-label text-left") Telefono*:
+						div(class="col-sm-4")
+							input(type="tel" class="text-left form-control " name="telefono" placeholder="Telefono" readonly)
+					div(class="form-group")
+						label(for="rfc cliente" class="col-sm-2 control-label") RFC:
+						div(class="col-sm-4")
+							input(type="text" class="form-control " name="rfc" placeholder="RFC" readonly)
+						label(for="curp cliente" class="col-sm-2 control-label text-left") CURP:
+						div(class="col-sm-4")
+							input(type="text" class="text-left form-control " name="curp" placeholder="Curp" readonly) 
+					div(class="form-group")
+						label(for="calle cliente" class="col-sm-2 control-label") Calle:
+						div(class="col-sm-2")
+							input(type="text" class="form-control " name="calle" placeholder="Calle" readonly)
+						div(class="col-sm-8 text-left")
+							label(for="no_ext cliente" class="col-sm-2 control-label text-left") No. exterior:
+							div(class="col-sm-3")
+								input(type="text" class="text-left form-control " name="no_ext" placeholder="Numero exterior" readonly)
+							label(for="no_int cliente" class="col-sm-2 control-label text-left") No. interior:
+							div(class="col-sm-3")
+								input(type="text" class="text-left form-control" name="no_int" placeholder="Numero interior" readonly)
+					div(class="form-group")
+						label(for="colinia cliente" class="col-sm-2 control-label") Colonia:
+						div(class="col-sm-4")
+							input(type="text" class="form-control " name="colonia" placeholder="Colonia" readonly)
+						label(for="codigo postal cliente" class="col-sm-2 control-label text-left") Código postal:
+						div(class="col-sm-4")
+							input(type="text" class="text-left form-control " name="codigo_postal" placeholder="Código postal" readonly)
+					div(class="form-group")
+						label(for="localidad cliente" class="col-sm-2 control-label") Localidad:
+						div(class="col-sm-4")
+							input(type="text" class="form-control " name="localidad" placeholder="Localidad" readonly)
+						label(for="Municipio cliente" class="col-sm-2 control-label text-left") Municipio:
+						div(class="col-sm-4")
+							input(type="text" class="text-left form-control " name="municipio" placeholder="municipio" readonly)
+					div(class="form-group")
+						label(for="estado cliente" class="col-sm-2 control-label") Estado:
+						div(class="col-sm-4")
+							input(type="text" class="form-control " name="estado" placeholder="Estado" readonly)
+		div(class="container" )
+			div(class="panel panel-default" )
+				div(class="panel-heading")
+					h4 Datos del pedido
+				div(class="panel-body form-horizontal")
+					div(class="form-group" )
+						label(class="col-sm-2 control-label") Nº folio:
+						div(class="col-sm-4")
+							input(type="text" class="form-control " name="no_pedido" readonly)
+					div(class="form-group")
+						label(class="col-sm-2 control-label") Fecha:
+						div(class="col-sm-4")
+							input(type="text" class="form-control " name="fecha" readonly)
+					div(class=" form-group")
+						div(class="col-sm-1")
+						div(class="col-sm-10")
+							table(class="table table-striped " name="table")
+								thead
+									tr
+										th(style="text-align:center;") Modelo
+										th(style="text-align:center;") Detalles modelo
+										th(style="text-align:center;") Cantidad
+										th(style="text-align:center;") Precio unitario
+										th(style="text-align:center;") Subtotal
+								tbody
+									tr
+										td(style="text-align:center;" contenteditable=false) 001
+										td(style="text-align:center;" contenteditable=false) ....
+										td(style="text-align:center;" contenteditable=false) 40
+										td(style="text-align:center;" contenteditable=false) 58$
+										td(style="text-align:center;" contenteditable=false) 5400$
+					div(class="form-group")
+						label(class="col-sm-2 control-label") Subtotal:
+						div(class="col-sm-4")
+							input(type="text" class="form-control " name="subtotal" readonly)
+					div(class="form-group")
+						label(class="col-sm-2 control-label") IVA:
+						div(class="col-sm-4")
+							select(class="form-control")
+								option(value="16") 16 %
+					div(class="form-group")
+						label(class="col-sm-2 control-label") Total:
+						div(class="col-sm-4")
+							input(type="text" class="form-control " name="total" readonly)
+		div(class="container" )
+			div(class="panel panel-success" )
+				div(class="panel-heading")
+					h4 Factura
+				div(class="panel-body form-horizontal")
+					div(class="form-group")
+						label(class="col-sm-2 control-label") Archivo factura(pdf):
+						div(class="col-sm-4")
+							input(type="file" class="form-control " name="imagen" required accept=".pdf")
+						div(class="col-sm-2")
+							button(type="submit" class="btn btn-primary") Subir factura
+					div(class="form-group")
+						div(class="col-sm-12 text-right")
+							button(class="btn btn-success" style="margin-right: 2em;") Ver factura
+							button(class="btn btn-success") Enviar factura por correo

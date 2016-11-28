@@ -12,7 +12,8 @@ block content
 					div(class="row")
 						label(class="col-sm-2") Filtro por nombre:
 						input(type="text" class="col-sm-2" id="nombre")
-						a(href="/clientes/marth" style="color:white;" class="btn btn-info fa fa-search" id="link" onclick="var value = document.getElementById('nombre').value;document.getElementById('link').setAttribute('href', '/clientes/'+value);")   Buscar
+						a(href="/clientes/marth" style="color:white;margin-left:1em;" class="btn btn-info fa fa-search" id="link" onclick="var value = document.getElementById('nombre').value;document.getElementById('link').setAttribute('href', '/clientes/'+value);")   Buscar
+						a(class=" btn btn-success fa fa-user-plus " aria-hidden="true" style="margin-left:1em;" href="/cliente/add")  Agregar
 					div(class="row" style="margin-top:2em;")
 						table(class="table table-striped")
 							thead

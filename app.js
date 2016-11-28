@@ -37,7 +37,7 @@ router.get('/',function(req, res){
 	res.render('index', {authenticate: req.isAuthenticated()});
 });
 // - Inicio de sesión
-router.route('/login')
+router.route('/login/')
 	.get(notIsLoggedIn,function(req, res){
 		res.render('inicio_sesion/login',{ message: req.flash('loginMessage')});
     })
@@ -48,9 +48,9 @@ router.route('/login')
     }));
 
 // - Cerrar sesión
-router.get('/logout', function(req, res) {
+router.get('/logout/', function(req, res) {
         req.logout();
-        res.redirect('/login');
+        res.redirect('/login/');
     });
 
 // - Redirijir segun el tipo de usuario
@@ -59,11 +59,11 @@ router.get('/redirect_user',isLoggedIn,function(req, res){
     if(req.user.usuario == 'empleado_mostrador'){
         res.render('empleado_mostrador/principal');
     }else if(req.user.usuario == 'diseñador'){
-
+        res.redirect('/disenio/lista/');
     }else if(req.user.usuario == 'administrador'){
         res.render('administrador/principal');
     }else if(req.user.usuario == 'contador'){
-
+        res.redirect('/factura/lista/');
     }
 });
 
@@ -198,9 +198,22 @@ router.route('/pedido/add/:id_cliente?/:modelos?')
     })
     .post(isLoggedIn, function(req, res){
         console.log('POST /pedido/add');
-        console.log(req.body.table)
-        console.log(req.body)
+        console.log(req.body);
+
     });
+
+// Lista para indicar terminado de pedido
+router.get('/pedidos/pendientes/', isLoggedIn, function(req, res){
+    console.log('/pedidos/pendientes/');
+    // mandar pedidos pendientes de la db
+    res.render('empleado_mostrador/pedidosPendientes');
+});
+
+// Lista que cambia los pedidos a entregados 
+router.get('/pedidos/entregas/', isLoggedIn, function(req, res){
+    console.log('/pedidos/entregas/');
+    res.render('administrador/entregaPedidos');
+});
 
 // MARK: - Agregar cliente
 router.route('/cliente/add')
@@ -226,7 +239,7 @@ router.route('/cliente/add')
                             telefono: rows[0].telefono,
                             correo: rows[0].correo
                         }
-                        res.render('empleado_mostrador/addPedido', {cliente: json});
+                        res.render('empleado_mostrador/addPedido', {cliente: json, modelos: {}});
                     }
                 });
             }
@@ -294,7 +307,31 @@ router.get('/modelos_seleccionados/:id_cliente/:modelos/', isLoggedIn, function(
     });
 });
 
+// Lista de diseños a realizar
 
+router.get('/disenio/lista/', isLoggedIn, function(req, res){
+    console.log('GET /disenio/lista/');
+    // mandar la lista de diseños de la base de datos
+    res.render('diseniador/listaDisenios');
+});
+// Especificaciones disenio con el numero de pedido
+router.get('/disenio/:no_pedido/', isLoggedIn, function(req, res){
+    console.log('GET /disenio/:no_pedido');
+    res.render('diseniador/especificacionesDisenio');
+});
+
+// Lista de facturas a realizar
+router.get('/factura/lista/', isLoggedIn, function(req, res){
+    // mandar las factoruas de la base de datos
+    console.log('GET /factura/lista/');
+    res.render('contador/listaFacturas')
+
+});
+router.get('/factura/:no_pedido/', isLoggedIn, function(req, res){
+    console.log('GET /factura/:no_pedido');
+    res.render('contador/informacionPedido');
+
+});
 app.use(router);
 app.use(function(req, res){
 	res.status(400);

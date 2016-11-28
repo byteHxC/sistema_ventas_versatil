@@ -1,0 +1,59 @@
+extends ../layout
+block content
+	style().
+		html{
+			background-color: #f2f2f2;
+		}
+	script(src="../../js/validators.js")
+	script(src="../../js/parseTable.js")
+	script(src="../../../js/parseTable.js")
+	script(src="../../../js/validators.js")
+	script(src="node_modules/jquery/dist/jquery.min.js")
+	div(class="container-fluid")
+		div(class="row" style="background: #465669;")
+			div(class="col-md-3 text-center" style="background: #4e6075;") 
+				h2(style="color:white;") Versatil
+			div(class="col-md-9 text-center") 
+				h2(style="color:white;") Lista de pedidos 
+		div(class="container")
+			div(class="row" style="margin-top:2em;")
+				label(class="col-sm-2 text-right control-label") Filtrar por:
+				div(class="col-sm-2 text-left" )
+					select(name="filtro_por" class="form-control" id="filtro")
+						option(value="modelo") Nº Pedido
+						option(value="precio") Nombre cliente
+				div(class="col-sm-2")
+					input(type="text" class="col-sm-2 form-control" id="valor" placeholder="Valor de busqueda")
+				a(href="#" style="color:white;" class="btn btn-info fa fa-search" id="link" onclick="")   Buscar
+		div(class="row" style="margin-top:2em;")
+					table(class="table table-striped")
+						thead
+							tr
+								th(style="text-align:center;") Nº Pedido
+								th(style="text-align:center;") Fecha
+								th(style="text-align:center;") Nombre cliente
+								th(style="text-align:center;") Telefono cliente
+								th(style="text-align:center;") Correo cliente
+								th(style="text-align:center;") Estado
+								th(style="text-align:center;") Nota de venta
+								th(style="text-align:center;") Facturación
+
+						tbody
+							td(style="text-align:center;" contenteditable=false) 0001
+							td(style="text-align:center;" contenteditable=false) 12/05/1990
+							td(style="text-align:center;" contenteditable=false) Federico Esparza
+							td(style="text-align:center;" contenteditable=false) 748574534
+							td(style="text-align:center;" contenteditable=false) fede@papi.com
+							td(style="text-center")
+								select(class="form-control text-center")
+									option(value="Pendiente") Pendiente
+									option(value="Terminado") Terminado
+							td(style="text-align:center;")
+								a(href="#" style="color:white;" class="btn btn-success fa fa-user-plus")  Ver nota de venta
+							td(style="text-align:center;")
+								a(href="#" style="color:white;" class="btn btn-info fa fa-user-plus")  Solicitar factura
+
+			div(class="row")
+				div(class="col-sm-12 text-right" style="margin-bottom:2em;")
+					a(href="/redirect_user" style="color:white;" class="btn btn-success fa fa-chevron-circle-left")  Regresar
+

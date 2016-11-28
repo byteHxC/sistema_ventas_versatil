@@ -69,3 +69,6 @@ span{
 	font-family: 'Raleway', sans-serif;
 	font-size: 16px;
 }
+.separator{
+	border-bottom: 1em;
+}

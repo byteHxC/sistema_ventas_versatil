@@ -1,0 +1,63 @@
+extends ../layout
+block content
+	style().
+		html{
+			background-color: #f2f2f2;
+		}
+	script(src="../../js/validators.js")
+	script(src="../../js/parseTable.js")
+	script(src="../../../js/parseTable.js")
+	script(src="../../../js/validators.js")
+	script(src="node_modules/jquery/dist/jquery.min.js")
+	div(class="container-fluid")
+		div(class="row" style="background: #465669;")
+			div(class="col-md-3 text-center" style="background: #4e6075;") 
+				h2(style="color:white;") Versatil - Diseñador
+			div(class="col-md-9 text-center") 
+				h2(style="color:white;") Especificaciones de diseño
+		div(class="container")
+			div(class="row" style="margin-top:3em;")
+				label(for="no_folio" class="col-sm-2 control-label") No. pedido:
+				div(class="col-sm-4")
+					input(type="text" class="form-control " name="no_pedido" placeholder="Numero de pedido" readonly)
+			div(class="row" style="margin-top:1em;")
+				label(class="col-sm-2 control-label") Fecha:
+				div(class="col-sm-4")
+					input(type="text" class="form-control " name="fecha" placeholder="Fecha" readonly)
+			div(class="row" style="margin-top:3em;border-bottom: 1px solid #eeeeee;")
+				label(class="col-sm-3" style="") Modelos del pedido
+			div(class="row")
+				div(class="col-sm-1")
+				div(class="col-sm-10")
+					table(class="table table-striped" name="table" id="modelos_pedido")
+						thead
+							tr
+								th(style="text-align:center;") Modelo
+								th(style="text-align:center;") Cantidad
+						tbody
+							tr
+								td(style="text-align:center;" contenteditable=false) 0001
+								td(style="text-align:center;" contenteditable=true) 50
+			div(class="row" style="margin-top:3em;border-bottom: 1px solid #eeeeee;")
+				label(class="col-sm-3" style="") Especificaciones de diseño
+			div(class="row" style="")
+				textarea(class="form-control" rows="8" placeholder="Especificaciones de diseño")
+			div(class="row" style="margin-top:2em;")
+				//- put actualizar el estado del diseño
+				form(method="post" action="#" class="form-horizontal")
+					div(class="form-group")
+						label(class="col-sm-2" style="") Estado del diseño:
+						div(class="col-sm-2 text-left")
+							select(class="form-control")
+								option(value="pendiente") Pendiente
+								option(value="revision") Revision
+								option(value="autorizado") Autorizado
+					div(class="form-group")
+						div(class="col-sm-12 text-right")
+							button(type="submit" class="btn btn-info") Regresar
+
+
+
+
+
+

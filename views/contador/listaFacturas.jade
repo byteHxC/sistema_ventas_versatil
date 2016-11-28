@@ -1,0 +1,34 @@
+extends ../layout
+block content
+	style().
+		html{
+			background-color: #f2f2f2;
+		}
+	script(src="../../js/validators.js")
+	script(src="../../js/parseTable.js")
+	script(src="../../../js/parseTable.js")
+	script(src="../../../js/validators.js")
+	script(src="node_modules/jquery/dist/jquery.min.js")
+	div(class="container-fluid")
+		div(class="row" style="background: #465669;")
+			div(class="col-md-3 text-center" style="background: #4e6075;padding-bottom:0.5em;") 
+				h2(style="color:white;") Versatil - Contador
+				button(class="fa fa-user-times btn btn-danger")  
+					a(href="/logout/")  Cerrar sesion
+			div(class="col-md-9 text-center") 
+				h2(style="color:white;") Lista de facturas pendientes
+		div(class="container")
+			div(class="row" style="margin-top:2em;")
+				table(class="table table-striped" style=" margin-top:3em;")
+					thead
+						tr
+							th(style="text-align:center;") Nº Pedido
+							th(style="text-align:center;") Fecha
+							th(style="text-align:center;") Información de pedido
+
+					tbody
+						tr
+							td(style="text-align:center;" contenteditable=false) 0001
+							td(style="text-align:center;" contenteditable=false) 01/09/2016
+							td(style="text-align:center;")
+								a(href="/factura/:no_pedido/" style="color:white;" class="btn btn-success") Información pedido
