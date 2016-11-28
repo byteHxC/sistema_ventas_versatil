@@ -197,9 +197,27 @@ router.route('/pedido/add/:id_cliente?/:modelos?')
         }
     })
     .post(isLoggedIn, function(req, res){
-        console.log('POST /pedido/add');
-        console.log(req.body);
-
+        console.log('POST /pedido/add/');
+        // console.log(req.body);
+        // console.log(req.body.pedido);
+        var pedido = req.body.pedido
+        var modelos_pedido = req.body.modelos_pedido;
+        connectionMySql.query('INSERT INTO pedidos (fecha, total, anticipo, especificaciones, estado_disenio, ruta_nota_venta, id_cliente, estado_pedido, fecha_entrega) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)', [pedido.fecha, pedido.total, pedido.anticipo, pedido.especificaciones,'pendiente','/',pedido.cliente_id,'pendiente', pedido.fecha_entrega], function(error, result, fields){
+            if(error){
+                console.log(error.message);
+            }else{
+                // result.insertId
+                for(var i = 0; i < modelos_pedido.length; i++){
+                    console.log(modelos_pedido[i]);
+                    connectionMySql.query('INSERT INTO modelos_pedido (no_folio, id_modelo, cantidad, detalles, subtotal) VALUES (?, ?, ?, ?, ?)', [result.insertId,modelos_pedido[i].Modelo,modelos_pedido[i].Cantidad, modelos_pedido[i].Detalles, modelos_pedido[i].Subtotal], function(error, result, fields){
+                        if(error){
+                            console.log(error.message);
+                        }
+                    });
+                }
+                res.redirect('/redirect_user/');
+            }
+        });
     });
 
 // Lista para indicar terminado de pedido
