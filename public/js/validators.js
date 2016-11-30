@@ -1,17 +1,27 @@
 function validarCliente(id_cliente){
 	var nombre = document.getElementById('nombre');
-	if(nombre.value.length > 1){
+	if(nombre.value.length == 0 || nombre.value==null){
 		// "/seleccionar_modelos/#{cliente.id_cliente}/:filtro?/:valor?/
-		document.getElementById('link').setAttribute('href','/seleccionar_modelos/'+id_cliente+'/:filtro?/:valor?/');
-	}else{
-		alert('Primero agregue el cliente');
+	
+		swal({
+			title: "Error",
+			text: "Antes de agregar modelos, agregue al cliente.",
+			type: "error",
+			confirmButtonText: "Aceptar"
+		});
 		document.getElementById('link').setAttribute('href','#');
+	}else{
+		document.getElementById('link').setAttribute('href','/seleccionar_modelos/'+id_cliente+'/:filtro?/:valor?/');
 	}
 }
 
 function registrarPedido(){
+	var error_messages = "";
 	var tabla = document.getElementById('modelos_pedido');
 	var data_table = parseTable(tabla);
+	if(data_table.length == 0)
+		error_messages += "- El pedido debe tener modelo(s) registrado(s) \n";
+
 	var data_pedido = {
 		no_pedido: document.getElementById('no_pedido').value.value,
 		fecha: document.getElementById('fecha').value,
@@ -21,16 +31,56 @@ function registrarPedido(){
 		especificaciones: document.getElementById('especificaciones').value,
 		fecha_entrega: document.getElementById('fecha_entrega').value
 	}
-	var data = {pedido: data_pedido, modelos_pedido: data_table};
-	$.ajax({
-	    url: "/pedido/add/",
-	    type: "POST",
-	    data: JSON.stringify(data),
-	    contentType: "application/json"
-	});
 
-	// console.log(data_table);
-	// console.log(data_pedido);
+	if( !(/^\d{4}\/\d{2}\/\d{2}$/.test(data_pedido.fecha_entrega)) ){
+		error_messages += "- La fecha de entrega debe tener formato yyyy/mm/dd \n";
+	}
+	if(data_pedido.cliente_id.length == 0){
+		error_messages += "- Seleccione un cliente \n";
+	}
+	if(data_pedido.total.length == 0){
+		error_messages += "- El total debe contener un valor numerico \n";
+	}else if(!(/^\d+(.\d)*$/.test(data_pedido.total)) ){
+		error_messages += "- El total debe ser numerico \n";
+	}
+	// alert(data_pedido.anticipo)
+	if(data_pedido.anticipo.length == 0){
+		error_messages += "- El anticipo debe contener un valor numerico \n";
+	}else if(!(/^\d+(.\d)*$/.test(data_pedido.anticipo)) ){
+		error_messages += "- El anticipo debe ser numerico \n";
+	}
+
+	if(data_pedido.especificaciones.length == 0){
+		error_messages += "- Debe ingresar las especificaciones del pedido \n";
+	}
+
+	if(error_messages == ""){
+		var data = {pedido: data_pedido, modelos_pedido: data_table};
+		$.ajax({
+		    url: "/pedido/add/",
+		    type: "POST",
+		    data: JSON.stringify(data),
+		    contentType: "application/json",
+		    success: function(response) {
+		    	// alert(response)
+		    	if (response) {
+		        	window.location.href = response;
+		        }
+		    },
+		    complete: function(xhr, statusText){
+    			alert(xhr.status);
+    			if(xhr.status == 400){
+					document.getElementById('message').innerHTML="Verificar formulario";
+					document.getElementById('alert').style.display = 'block';	       
+    			}
+    		}
+		});
+
+	}else{
+		document.getElementById('message').innerHTML=error_messages;
+		document.getElementById('alert').style.display = 'block';
+	}
+
 }
 
 // $(document).ready(function(){

@@ -180,7 +180,11 @@ router.route('/pedido/add/:id_cliente?/:modelos?')
                             console.log(error.message);
                         }else{
                            var json = JSON.parse(JSON.stringify(rows));
-                           res.render('empleado_mostrador/addPedido', {cliente: data_cliente, modelos: json})
+                           connectionMySql.query("select auto_increment from information_schema.TABLES WHERE  table_name like 'pedidos';",function(error, rows){
+                                var no_pedido = JSON.parse(JSON.stringify(rows))[0].auto_increment;
+                                console.log(no_pedido);
+                                res.render('empleado_mostrador/addPedido', {cliente: data_cliente, modelos: json,no_pedido: no_pedido});
+                           });          
                         }
                     }); 
                     
@@ -193,7 +197,10 @@ router.route('/pedido/add/:id_cliente?/:modelos?')
                 correo: '',
                 telefono: ''
             };
-            res.render('empleado_mostrador/addPedido', {cliente: data_cliente, modelos: {}})
+            connectionMySql.query("select auto_increment from information_schema.TABLES WHERE  table_name like 'pedidos';",function(error, rows){
+                var no_pedido = JSON.parse(JSON.stringify(rows))[0].auto_increment;
+                res.render('empleado_mostrador/addPedido', {cliente: data_cliente, modelos: {},no_pedido: no_pedido});
+           }); 
         }
     })
     .post(isLoggedIn, function(req, res){
@@ -205,6 +212,7 @@ router.route('/pedido/add/:id_cliente?/:modelos?')
         connectionMySql.query('INSERT INTO pedidos (fecha, total, anticipo, especificaciones, estado_disenio, ruta_nota_venta, id_cliente, estado_pedido, fecha_entrega) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)', [pedido.fecha, pedido.total, pedido.anticipo, pedido.especificaciones,'pendiente','/',pedido.cliente_id,'pendiente', pedido.fecha_entrega], function(error, result, fields){
             if(error){
                 console.log(error.message);
+                res.status(400).send('#');
             }else{
                 // result.insertId
                 for(var i = 0; i < modelos_pedido.length; i++){
@@ -212,10 +220,11 @@ router.route('/pedido/add/:id_cliente?/:modelos?')
                     connectionMySql.query('INSERT INTO modelos_pedido (no_folio, id_modelo, cantidad, detalles, subtotal) VALUES (?, ?, ?, ?, ?)', [result.insertId,modelos_pedido[i].Modelo,modelos_pedido[i].Cantidad, modelos_pedido[i].Detalles, modelos_pedido[i].Subtotal], function(error, result, fields){
                         if(error){
                             console.log(error.message);
+                            res.status(400).send('#');
                         }
                     });
                 }
-                res.redirect('/redirect_user/');
+                res.status(200).send('/redirect_user/');
             }
         });
     });
@@ -257,7 +266,11 @@ router.route('/cliente/add')
                             telefono: rows[0].telefono,
                             correo: rows[0].correo
                         }
-                        res.render('empleado_mostrador/addPedido', {cliente: json, modelos: {}});
+                        connectionMySql.query("select auto_increment from information_schema.TABLES WHERE  table_name like 'pedidos';",function(error, rows){
+                            var no_pedido = JSON.parse(JSON.stringify(rows))[0].auto_increment;
+                            console.log(no_pedido);
+                            res.render('empleado_mostrador/addPedido', {cliente: json, modelos: {},no_pedido: no_pedido});
+                       });
                     }
                 });
             }
@@ -299,8 +312,11 @@ router.get('/cliente_seleccionado/:id_cliente/', isLoggedIn, function(req, res){
                 telefono: rows[0].telefono,
                 correo: rows[0].correo
             }
-            var modelos = {}
-            res.render('empleado_mostrador/addPedido', {cliente: json, modelos: modelos});
+            connectionMySql.query("select auto_increment from information_schema.TABLES WHERE  table_name like 'pedidos';",function(error, rows){
+                var no_pedido = JSON.parse(JSON.stringify(rows))[0].auto_increment;
+                console.log(no_pedido);
+                res.render('empleado_mostrador/addPedido', {cliente: json, modelos: {},no_pedido: no_pedido});
+           });
         }
     });
 });

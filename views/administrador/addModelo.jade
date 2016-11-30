@@ -4,12 +4,41 @@ block content
 		html{
 			background-color: #ffffff;
 		}
+	script().
+		function validarCampos(form){
+			var errores = false;
+			var message = "";
+			if(form.imagen.value.length == 0){				
+				message +="-Seleccione una imagen \n";
+				errores = true;
+			}
+			if(form.descripcion.value.length == 0){
+				message +="-Ingrese una desripción \n";
+				errores = true;
+			}
+			if(form.precio_unitario.value.length == 0){
+				message +="-Ingrese el precio unitario \n";
+				errores = true;
+			}
+			if(errores == true){
+				document.getElementById('message').innerHTML=message;
+				document.getElementById('alert').style.display = 'block';
+				
+				return false;
+			}
+			return true;
+		}
 	div(class="container")
 		div(class="panel panel-primary" style="margin-top:0.5em;")
 				div(class="panel-heading" style="background:#4e6073;")
 					h1(class="planel-title" style="font-size: 25px;text-align:center;") Agregar modelo
 				div(class="panel-body" style="background:#f2f2f2;")
-						form(method="post" action="/catalogo/add" class="form-horizontal" enctype="multipart/form-data")
+						form(method="post" action="/catalogo/add" class="form-horizontal" enctype="multipart/form-data" onsubmit="return validarCampos(this);")
+							div(class="alert alert-danger " role="alert" id="alert" hidden=true)
+								button(type="button" class="close" data-dismiss="alert" aria-label="Close")
+									span(aria-hidden="true") &times;
+								strong() Corrija los siguientes campos
+								pre(id="message" class="alert alert-danger" style="border:none; padding:none;")
 							div(class="form-group")
 								label(for="Modelo" class="col-sm-2 control-label") Imagen:
 								div(class="col-sm-4")
@@ -25,7 +54,7 @@ block content
 							div(class="form-group")
 								label(for="Precio unitario" class="col-sm-2 control-label") Precio unitario:
 								div(class="col-sm-4")
-									input(type="number" class="form-control " name="precio_unitario" placeholder="precio unitario" required)
+									input(type="number" class="form-control " name="precio_unitario" placeholder="precio unitario" required min="0")
 							div(class="form-group")
 								label(class="col-sm-2")
 								div(class="col-sm-3")

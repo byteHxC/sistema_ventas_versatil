@@ -4,7 +4,8 @@ block content
 		html{
 			background-color: #f2f2f2;
 		}
-
+	script(src="../../../sweet_alerts/dist/sweetalert.min.js")
+	link( rel="stylesheet" type="text/css" href="../../../sweet_alerts/dist/sweetalert.css")
 	script(src="../../../jquery/dist/jquery.min.js")
 	script(src="../../../js/moment.js")
 	script(src="../../js/validators.js")
@@ -17,16 +18,19 @@ block content
 				h2(style="color:white;") Versatil
 			div(class="col-md-9 text-center") 
 				h2(style="color:white;") Agregar pedido
-		div(class="row")
+		div(class="container" style="margin-bottom:2em;")
 			form(method="post" action="/pedido/add" class="form-horizontal")
+				div(class="alert alert-danger " role="alert" id="alert" hidden=true)
+					strong() Corrija los siguientes campos
+					pre(id="message" style="border:none; padding:none;margin:none;background:none;color: #a74544;")
 				div(class="form-group" style="margin-top:1em;")
 					label(for="no_pedido" class="col-sm-2 control-label") No. pedido
 					div(class="col-sm-4")
-						input(type="number" class="form-control " name="no_pedido" id="no_pedido" placeholder="Numero de pedido" readonly required)
+						input(type="number" class="form-control " name="no_pedido" id="no_pedido" placeholder="Numero de pedido" readonly required value="#{no_pedido}")
 				div(class="form-group" style="margin-top:1em;")
 					label(for="fecha" class="col-sm-2 control-label") Fecha
 					div(class="col-sm-4")
-						input(type="date" class="form-control " name="fecha" placeholder="Fecha" id="fecha" readonly required)
+						input(type="text" class="form-control " name="fecha" placeholder="Fecha" id="fecha" readonly required)
 					script().
 						document.getElementById('fecha').value=moment().format('YYYY/MM/DD')
 				div(class="container" style="background:#cccccc;border-radius: 10px 10px 10px 10px;")
@@ -36,7 +40,7 @@ block content
 						label(for="Nombre cliente" class="col-sm-2 control-label") Nombre:
 						div(class="col-sm-6")
 							input(id="cliente_id" value="#{cliente.id_cliente}" hidden=true)
-							input(type="text" class="form-control " name="nombre" placeholder="Nombre completo cliente" value="#{cliente.nombre}" readonly required)
+							input(type="text" class="form-control " name="nombre" placeholder="Nombre completo cliente" value="#{cliente.nombre}" readonly required id="nombre")
 						div(class="col-sm-4")
 							a(class="fa fa-search btn btn-info" aria-hidden="true" style="background: #475668; border:none;" href="/clientes")  Buscar
 					div(class="form-group" style="margin-top:1em;")
@@ -88,7 +92,7 @@ block content
 					div(class="form-group" style="margin-top:1em;")
 						label(for="fecha_entrega" class="col-sm-2 control-label") Fecha de entrega:
 						div(class="col-sm-2")
-							input(type="date" class="form-control " name="fecha_entrega" placeholder="Fecha de entrega" required id="fecha_entrega")
+							input(type="date" class="form-control " name="fecha_entrega" placeholder="Fecha de entrega" required id="fecha_entrega" value="yyyy/mm/dd")
 					div(class="form-group")
 						label(class="col-sm-2")
 						div(class="col-sm-3")
