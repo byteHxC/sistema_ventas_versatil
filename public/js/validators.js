@@ -52,7 +52,7 @@ function registrarPedido(){
 		}
 	}
 	var data_pedido = {
-		no_pedido: document.getElementById('no_pedido').value.value,
+		no_pedido: document.getElementById('no_pedido').value,
 		fecha: document.getElementById('fecha').value,
 		cliente_id: document.getElementById('cliente_id').value,
 		total: document.getElementById('total').value,
@@ -85,6 +85,7 @@ function registrarPedido(){
 
 	if(error_messages == ""){
 		var data = {pedido: data_pedido, modelos_pedido: data_table};
+		var redirectWindow = window.open('/nota_venta/'+data.pedido.no_pedido+'/', 'popup');
 		$.ajax({
 		    url: "/pedido/add/",
 		    type: "POST",
@@ -94,14 +95,16 @@ function registrarPedido(){
 		    	// alert(response)
 		    	if (response) {
 		        	window.location.href = response;
+		        	redirectWindow.location;
 		        }
 		    },
 		    complete: function(xhr, statusText){
-    			alert(xhr.status);
+    			// alert(xhr.status);
     			if(xhr.status == 400){
 					document.getElementById('message').innerHTML="Verificar formulario";
 					document.getElementById('alert').style.display = 'block';	       
     			}
+    			// alert('/nota_venta/'+data.pedido.no_pedido+'/');
     		}
 		});
 

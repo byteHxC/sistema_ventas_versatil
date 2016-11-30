@@ -7,7 +7,10 @@ const express = require('express'),
 	session = require('express-session'),
     multer = require('multer'),
     upload = multer({dest: './uploads/'}),
-    request = require('request');
+    request = require('request'),
+    PDFDocument = require('pdfkit'),
+    blobStream  = require ('blob-stream'),
+    fs = require('fs');
 
 // connector myssql
 const connectionMySql = require('./config/database.js')
@@ -217,17 +220,65 @@ router.route('/pedido/add/:id_cliente?/:modelos?')
                 // result.insertId
                 for(var i = 0; i < modelos_pedido.length; i++){
                     console.log(modelos_pedido[i]);
-                    connectionMySql.query('INSERT INTO modelos_pedido (no_folio, id_modelo, cantidad, detalles, subtotal) VALUES (?, ?, ?, ?, ?)', [result.insertId,modelos_pedido[i].Modelo,modelos_pedido[i].Cantidad, modelos_pedido[i].Detalles, modelos_pedido[i].Subtotal], function(error, result, fields){
+                    connectionMySql.query('INSERT INTO modelos_pedido (no_folio, id_modelo, cantidad, detalles, subtotal) VALUES (?, ?, ?, ?, ?)', [result.insertId,modelos_pedido[i].Modelo,modelos_pedido[i].Cantidad, modelos_pedido[i].Detalles, modelos_pedido[i].Subtotal], function(error, result2, fields){
                         if(error){
                             console.log(error.message);
                             res.status(400).send('#');
                         }
                     });
                 }
+                console.log('Generando nota de venta: notas_venta/'+result.insertId+'.pdf ....');
+                // Generar nota de venta
+                 var notaVenta = new PDFDocument;
+                // guardamos el pdf en notas_venta/:no_pedido
+                var ruta_nota_venta = 'notas_venta/'+result.insertId+'.pdf'
+                notaVenta.pipe(fs.createWriteStream(ruta_nota_venta));
+                notaVenta.font('Times-Roman')
+                    .fontSize(30)
+                    .text('Invitaciones versatil',100,100);
+                notaVenta.text('NOTA DE VENTA');
+                notaVenta.font('Times-Roman')
+                    .fontSize(16)
+                notaVenta.text('No. Pedido: ' + result.insertId);
+                notaVenta.text('Fecha: ' + pedido.fecha);
+                console.log('send')
+                getCliente(pedido.cliente_id, function(err, data_cliente){
+                    console.log('in');
+                    notaVenta.text('Datos del cliente');
+                    notaVenta.text('Nombre: ' + data_cliente.nombre);
+                    notaVenta.text('Telefono: ' + data_cliente.telefono);
+                    notaVenta.text('Correo: ' + data_cliente.correo);
+                    notaVenta.text('Datos pedido' + '');
+                    notaVenta.text('Modelos:');
+                    notaVenta.text('Modelo | Detalles | Cantidad | Precio unitario | Subtotal');
+                        
+                    for(var i = 0; i < modelos_pedido.length; i++){
+                        console.log(modelos_pedido[i]); 
+                        notaVenta.text(modelos_pedido[i].Modelo+' | '+modelos_pedido[i].Detalles+' | '+modelos_pedido[i].Cantidad+' | '+modelos_pedido[i].Precio_unitario+' |'+modelos_pedido[i].Subtotal);
+                    }
+                    notaVenta.text('Total: ' + pedido.total);
+                    notaVenta.text('Anticipo: ' + pedido.anticipo);
+                    notaVenta.text('Fecha entrega: ' + pedido.fecha_entrega);
+                    
+                    notaVenta.end();
+                    
+                });
                 res.status(200).send('/redirect_user/');
+                 // res.status(200).send('/nota_venta/'+pedido.no_pedido+'/')
+               
             }
         });
     });
+
+router.get('/nota_venta/:no_pedido/', function(req, res){
+    // view pdf
+    var ruta_nota_venta = '/notas_venta/'+req.params.no_pedido+'.pdf'
+    console.log(__dirname + ruta_nota_venta);
+    fs.readFile(__dirname + ruta_nota_venta , function (err,data){
+        res.contentType("application/pdf");
+        res.send(data);
+    });
+});
 
 // Lista para indicar terminado de pedido
 router.get('/pedidos/pendientes/', isLoggedIn, function(req, res){
@@ -239,7 +290,11 @@ router.get('/pedidos/pendientes/', isLoggedIn, function(req, res){
 // Lista que cambia los pedidos a entregados 
 router.get('/pedidos/entregas/', isLoggedIn, function(req, res){
     console.log('/pedidos/entregas/');
-    res.render('administrador/entregaPedidos');
+    connectionMySql.query("select *from pedidos join clientes on pedidos.id_cliente=clientes.id_cliente;",function(error, rows){
+        var pedidos = JSON.parse(JSON.stringify(rows));
+        console.log(pedidos)
+        res.render('administrador/entregaPedidos',{pedidos: pedidos});
+    });
 });
 
 // MARK: - Agregar cliente
