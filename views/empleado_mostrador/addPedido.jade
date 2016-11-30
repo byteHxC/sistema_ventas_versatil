@@ -66,21 +66,28 @@ block content
 										th(style="text-align:center;") Modelo
 										th(style="text-align:center;") Detalles
 										th(style="text-align:center;") Cantidad
-										th(style="text-align:center;") Precio unitario
+										th(style="text-align:center;") Precio_unitario
 										th(style="text-align:center;") Subtotal
 								tbody
 									each modelo in modelos
 										tr
 											td(style="text-align:center;" contenteditable=false) #{modelo.id_modelo}
 											td(style="text-align:center;" contenteditable=true) 
-											td(style="text-align:center;" contenteditable=true charoff="number") 
+											td(style="text-align:center;" contenteditable=true charoff="number")
 											td(style="text-align:center;" contenteditable=false) #{modelo.precio_unitario}
-											td(style="text-align:center;" contenteditable=false) 1500
+											td(style="text-align:center;" contenteditable=false id="modelo-#{modelo.id_modelo}") 
 
 					div(class="form-group" style="margin-top:2em;")
 						label(for="total" class="col-sm-2 control-label") Total:
 						div(class="col-sm-2")
-							input(type="number" class="form-control " name="total" placeholder="Total" id="total" readonly required value="1000")
+							input(type="number" class="form-control " name="total" placeholder="Total" id="total" readonly required)
+							
+						div(class="col-sm-2")
+							button(type="button" onclick="calcularTotales();" class="btn btn-info" style="background: #485667") 
+								i(class="fa fa-refresh fa-spin fa-fw")
+								span()   Calcular subtotal y total. 
+							
+
 					div(class="form-group" style="margin-top:1em;")
 						label(for="Anticipo" class="col-sm-2 control-label") Anticipo:
 						div(class="col-sm-2")
@@ -96,6 +103,7 @@ block content
 					div(class="form-group")
 						label(class="col-sm-2")
 						div(class="col-sm-3")
+
 							button(type="button" class="btn btn-success" onclick="registrarPedido();")
 								span(class="fa fa-plus-circle fo")    Registrar pedido
 							a(href="/redirect_user/" class="btn btn-danger")

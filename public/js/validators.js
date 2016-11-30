@@ -14,14 +14,43 @@ function validarCliente(id_cliente){
 		document.getElementById('link').setAttribute('href','/seleccionar_modelos/'+id_cliente+'/:filtro?/:valor?/');
 	}
 }
+function calcularTotales(){
+	var error_messages = "";
+	var tabla = document.getElementById('modelos_pedido');
+	var data_table = parseTable(tabla);
+	var total = 0;
+	if(data_table.length == 0)
+		error_messages += "- El pedido debe tener modelo(s) registrado(s). \n";
+	for (var i = 0; i < data_table.length; i++) {
+		total += parseInt(data_table[i].Precio_unitario) * parseInt(data_table[i].Cantidad);
+		document.getElementById('modelo-'+data_table[i].Modelo).innerHTML=(parseInt(data_table[i].Precio_unitario) * parseInt(data_table[i].Cantidad)).toString();
+		if( !(/^[1-9](\d)*$/.test(data_table[i].Cantidad)) ){
+			error_messages += "- La columna de cantidad de la tabla de modelos, debe contener un valor entero. \n"
+		}
+	}
+	if(error_messages == ""){
+		document.getElementById('total').value=total.toString();
+	}else{
+		swal({
+			title: "Error",
+			text: error_messages,
+			type: "error",
+			confirmButtonText: "Aceptar"
+		});
+	}
+}
 
 function registrarPedido(){
 	var error_messages = "";
 	var tabla = document.getElementById('modelos_pedido');
 	var data_table = parseTable(tabla);
 	if(data_table.length == 0)
-		error_messages += "- El pedido debe tener modelo(s) registrado(s) \n";
-
+		error_messages += "- El pedido debe tener modelo(s) registrado(s). \n";
+	for (var i = 0; i < data_table.length; i++) {
+		if( !(/^[1-9](\d)*$/.test(data_table[i].Cantidad)) ){
+			error_messages += "- La columna de cantidad de la tabla de modelos, debe contener un valor entero. \n"
+		}
+	}
 	var data_pedido = {
 		no_pedido: document.getElementById('no_pedido').value.value,
 		fecha: document.getElementById('fecha').value,
@@ -33,25 +62,25 @@ function registrarPedido(){
 	}
 
 	if( !(/^\d{4}\/\d{2}\/\d{2}$/.test(data_pedido.fecha_entrega)) ){
-		error_messages += "- La fecha de entrega debe tener formato yyyy/mm/dd \n";
+		error_messages += "- La fecha de entrega debe tener formato yyyy/mm/dd. \n";
 	}
 	if(data_pedido.cliente_id.length == 0){
-		error_messages += "- Seleccione un cliente \n";
+		error_messages += "- Seleccione un cliente. \n";
 	}
 	if(data_pedido.total.length == 0){
-		error_messages += "- El total debe contener un valor numerico \n";
+		error_messages += "- El total debe contener un valor numerico. \n";
 	}else if(!(/^\d+(.\d)*$/.test(data_pedido.total)) ){
-		error_messages += "- El total debe ser numerico \n";
+		error_messages += "- El total debe ser numerico. \n";
 	}
 	// alert(data_pedido.anticipo)
 	if(data_pedido.anticipo.length == 0){
-		error_messages += "- El anticipo debe contener un valor numerico \n";
+		error_messages += "- El anticipo debe contener un valor numerico. \n";
 	}else if(!(/^\d+(.\d)*$/.test(data_pedido.anticipo)) ){
-		error_messages += "- El anticipo debe ser numerico \n";
+		error_messages += "- El anticipo debe ser numerico. \n";
 	}
 
 	if(data_pedido.especificaciones.length == 0){
-		error_messages += "- Debe ingresar las especificaciones del pedido \n";
+		error_messages += "- Debe ingresar las especificaciones del pedido. \n";
 	}
 
 	if(error_messages == ""){
