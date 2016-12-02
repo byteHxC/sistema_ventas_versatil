@@ -281,18 +281,52 @@ router.get('/nota_venta/:no_pedido/', function(req, res){
 });
 
 // Lista para indicar terminado de pedido
-router.get('/pedidos/pendientes/', isLoggedIn, function(req, res){
-    console.log('/pedidos/pendientes/');
-    // mandar pedidos pendientes de la db
-    res.render('empleado_mostrador/pedidosPendientes');
-});
+router.route('/pedidos/pendientes/:no_pedido?/')
+    .get(isLoggedIn, function(req, res){
+        console.log(' GET /pedidos/pendientes/');
+        if(req.params.no_pedido){
+            console.log(req.params.no_pedido);
+            if(!(/^[1-9](\d)*$/.test(req.params.no_pedido))){
+                console.log('out')
+                connectionMySql.query('select *from pedidos join clientes on pedidos.id_cliente=clientes.id_cliente where clientes.nombre like "%'+req.params.no_pedido+'%" LIMIT 20;',function(error, rows){
+                    var pedidos = JSON.parse(JSON.stringify(rows));
+                    // console.log(pedidos)
+                    res.render('empleado_mostrador/pedidosPendientes',{pedidos: pedidos});
+                });
+                
+            }else{
+                console.log('in')
+                connectionMySql.query("select *from pedidos join clientes on pedidos.id_cliente=clientes.id_cliente where pedidos.no_folio=? LIMIT 20;",[req.params.no_pedido],function(error, rows){
+                    var pedidos = JSON.parse(JSON.stringify(rows));
+                    // console.log(pedidos)
+                    res.render('empleado_mostrador/pedidosPendientes',{pedidos: pedidos});
+                });
+            }
+        }else{
+            connectionMySql.query("select *from pedidos join clientes on pedidos.id_cliente=clientes.id_cliente LIMIT 20;",function(error, rows){
+                var pedidos = JSON.parse(JSON.stringify(rows));
+                // console.log(pedidos)
+                res.render('empleado_mostrador/pedidosPendientes',{pedidos: pedidos});
+            });
+        }
+    })
+    .put(isLoggedIn, function(req, res){
+        console.log('PUT /pedidos/pendientes/');
+        console.log(req.params.no_pedido)
+        connectionMySql.query("update pedidos set estado_pedido='terminado' where no_folio=?",[req.params.no_pedido],function(error, result, fields){
+            if(error)
+                console.log(error);
+            else
+                res.status(200).send('/pedidos/pendientes/');
+        });
+    });
 
 // Lista que cambia los pedidos a entregados 
 router.get('/pedidos/entregas/', isLoggedIn, function(req, res){
     console.log('/pedidos/entregas/');
     connectionMySql.query("select *from pedidos join clientes on pedidos.id_cliente=clientes.id_cliente;",function(error, rows){
         var pedidos = JSON.parse(JSON.stringify(rows));
-        console.log(pedidos)
+        // console.log(pedidos)
         res.render('administrador/entregaPedidos',{pedidos: pedidos});
     });
 });

@@ -8,7 +8,49 @@ block content
 	script(src="../../js/parseTable.js")
 	script(src="../../../js/parseTable.js")
 	script(src="../../../js/validators.js")
+	script(src="../../../jquery/dist/jquery.min.js")
 	script(src="node_modules/jquery/dist/jquery.min.js")
+	script(src="../../../sweet_alerts/dist/sweetalert.min.js")
+	link( rel="stylesheet" type="text/css" href="../../../sweet_alerts/dist/sweetalert.css")
+	script().
+		function pedidoTerminado(no_folio){
+			swal({   
+			   title: "¿Confirmación de cambio del estado del pedido?",
+			   text: "No se podra revertir este cambio.",   
+			   type: "warning",   
+			   showCancelButton: true,   
+			   confirmButtonColor: "#DD6B55",   
+			   confirmButtonText: "Si, estoy seguro.",   closeOnConfirm: false }, 
+			   function(){   
+				 
+				   	$.ajax({
+					   url: '/pedidos/pendientes/'+no_folio+'/?_method=put',
+					   type: 'POST',
+					   success: function(response) {
+						    if (response) {
+					        	window.location.href = response;
+					        	redirectWindow.location;
+					        }
+					   }
+					});
+					swal("Pedido Terminado!", "El estado del pedido ahora esta en terminado", "success"); 
+			   });
+		}
+		function buscarPedido(){
+			var filtro_por = document.getElementById('filtro').value;
+			var valor = document.getElementById('valor').value;
+			if(valor.length == 0 || valor==null){
+				swal({
+					title: "Error",
+					text: "Falta valor para el filtro.",
+					type: "error",
+					confirmButtonText: "Aceptar"
+				});
+			}else{
+				document.getElementById('link').setAttribute('href','/pedidos/pendientes/'+valor+'/');
+				
+			}
+		}
 	div(class="container-fluid")
 		div(class="row" style="background: #465669;")
 			div(class="col-md-3 text-center" style="background: #4e6075;") 
@@ -20,11 +62,11 @@ block content
 				label(class="col-sm-2 text-right control-label") Filtrar por:
 				div(class="col-sm-2 text-left" )
 					select(name="filtro_por" class="form-control" id="filtro")
-						option(value="modelo") Nº Pedido
-						option(value="precio") Nombre cliente
+						option(value="pedido") Nº Pedido
+						option(value="cliente") Nombre cliente
 				div(class="col-sm-2")
 					input(type="text" class="col-sm-2 form-control" id="valor" placeholder="Valor de busqueda")
-				a(href="#" style="color:white;" class="btn btn-info fa fa-search" id="link" onclick="")   Buscar
+				a(href="#" style="color:white;" class="btn btn-info fa fa-search" id="link" onclick="buscarPedido();")   Buscar
 			div(class="row" style="margin-top:2em;")
 					table(class="table table-striped")
 						thead
@@ -37,15 +79,24 @@ block content
 								th(style="text-align:center;") Estado
 
 						tbody
-							td(style="text-align:center;" contenteditable=false) 0001
-							td(style="text-align:center;" contenteditable=false) 12/05/1990
-							td(style="text-align:center;" contenteditable=false) Federico Esparza
-							td(style="text-align:center;" contenteditable=false) 748574534
-							td(style="text-align:center;" contenteditable=false) fede@papi.com
-							td(style="text-align:center;" contenteditable=false)
-								select(class="form-control")
-									option() Pendiente
-									option() Terminado
+							each pedido in pedidos
+								tr
+									td(style="text-align:center;" contenteditable=false) #{pedido.no_folio}
+									td(style="text-align:center;" contenteditable=false) #{pedido.fecha}
+									td(style="text-align:center;" contenteditable=false) #{pedido.nombre}
+									td(style="text-align:center;" contenteditable=false) #{pedido.telefono}
+									td(style="text-align:center;" contenteditable=false) #{pedido.correo}
+									td(style="text-align:center;" contenteditable=false)
+										select(class="form-control" onchange="pedidoTerminado(#{pedido.no_folio});")
+											// h1=pedido.estado_pedido
+											- if(pedido.estado_pedido == "pendiente"){
+												option(value="pendiente") Pendiente
+												option(value="terminado") Terminado
+											-}else if(pedido.estado_pedido == "terminado"){
+												option() Terminado
+											-}
+
+											
 
 			div(class="row")
 				div(class="col-sm-12 text-right" style="margin-bottom:2em;")
