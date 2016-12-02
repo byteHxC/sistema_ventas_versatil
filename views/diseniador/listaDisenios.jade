@@ -8,7 +8,23 @@ block content
 	script(src="../../js/parseTable.js")
 	script(src="../../../js/parseTable.js")
 	script(src="../../../js/validators.js")
-	script(src="node_modules/jquery/dist/jquery.min.js")
+	script(src="../../../sweet_alerts/dist/sweetalert.min.js")
+	link( rel="stylesheet" type="text/css" href="../../../sweet_alerts/dist/sweetalert.css")
+	script().
+		function buscarPedido(){
+			var filtro_por = document.getElementById('filtro').value;
+			var valor = document.getElementById('valor').value;
+			if(valor.length == 0 || valor==null){
+				swal({
+					title: "Error",
+					text: "Falta valor para el filtro.",
+					type: "error",
+					confirmButtonText: "Aceptar"
+				});
+			}else{
+				document.getElementById('link').setAttribute('href','/disenios/lista/'+valor+'/');
+			}
+		}
 	div(class="container-fluid")
 		div(class="row" style="background: #465669;")
 			div(class="col-md-3 text-center" style="background: #4e6075;padding-bottom:0.5em;") 
@@ -17,19 +33,30 @@ block content
 					a(href="/logout/")  Cerrar sesion
 			div(class="col-md-9 text-center") 
 				h2(style="color:white;") Lista de diseños
-		div(class="row" style="margin-top:2em;")
-			table(class="table table-striped" style=" margin-top:3em;")
-							thead
-								tr
-									th(style="text-align:center;") Nº Pedido
-									th(style="text-align:center;") Fecha
-									th(style="text-align:center;") Estado de diseño
-									th(style="text-align:center;") Mas información
+		div(class="container")
+			div(class="row" style="margin-top:2em;")
+				label(class="col-sm-2 text-right control-label") Filtrar por:
+				div(class="col-sm-2 text-left" )
+					select(name="filtro_por" class="form-control" id="filtro")
+						option(value="pedido") Nº Pedido
+						option(value="estado") Estado diseño
+				div(class="col-sm-2")
+					input(type="text" class="col-sm-2 form-control" id="valor" placeholder="Valor de busqueda")
+				a(href="#" style="color:white;" class="btn btn-info fa fa-search" id="link" onclick="buscarPedido();")   Buscar
+			div(class="row" style="margin-top:2em;")
+				table(class="table table-striped" style=" margin-top:3em;")
+								thead
+									tr
+										th(style="text-align:center;") Nº Pedido
+										th(style="text-align:center;") Fecha
+										th(style="text-align:center;") Estado de diseño
+										th(style="text-align:center;") Mas información
 
-							tbody
-								tr
-									td(style="text-align:center;" contenteditable=false) 0001
-									td(style="text-align:center;" contenteditable=false) 01/09/2016
-									td(style="text-align:center;" contenteditable=false) Pendiente
-									td(style="text-align:center;")
-										a(href="/disenio/no_pedido" style="color:white;" class="btn btn-info") Especificaciones diseño
+								tbody
+									each pedido in pedidos
+										tr
+											td(style="text-align:center;" contenteditable=false) #{pedido.no_pedido}
+											td(style="text-align:center;" contenteditable=false) #{pedido.fecha}
+											td(style="text-align:center;" contenteditable=false) #{pedido.estado_disenio}
+											td(style="text-align:center;")
+												a(href="/disenio/#{pedido.no_pedido}" style="color:white;" class="btn btn-info") Especificaciones diseño

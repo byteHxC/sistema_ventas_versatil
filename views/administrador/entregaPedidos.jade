@@ -8,7 +8,46 @@ block content
 	script(src="../../js/parseTable.js")
 	script(src="../../../js/parseTable.js")
 	script(src="../../../js/validators.js")
-	script(src="node_modules/jquery/dist/jquery.min.js")
+	script(src="../../../jquery/dist/jquery.min.js")
+	script(src="../../../sweet_alerts/dist/sweetalert.min.js")
+	link( rel="stylesheet" type="text/css" href="../../../sweet_alerts/dist/sweetalert.css")
+	script().
+		function entregarPedido(no_pedido){
+			swal({   
+				   title: "¿Confirmar entrega de pedido?",
+				   text: "No se podra revertir este cambio.",   
+				   type: "warning",   
+				   showCancelButton: true,   
+				   confirmButtonColor: "#DD6B55",   
+				   confirmButtonText: "Si, estoy seguro.",   closeOnConfirm: false }, 
+				   function(){   
+					   	$.ajax({
+						   url: '/pedidos/entregas/'+no_pedido+'/?_method=put',
+						   type: 'POST',
+						   success: function(response) {
+							    if (response) {
+						        	window.location.href = response;
+						        	redirectWindow.location;
+						        }
+						   }
+						});
+						swal("Pedido entregado satisfactoriamente!", "...", "success"); 
+				   });
+		}
+		function buscarPedido(){
+			var filtro_por = document.getElementById('filtro').value;
+			var valor = document.getElementById('valor').value;
+			if(valor.length == 0 || valor==null){
+				swal({
+					title: "Error",
+					text: "Falta valor para el filtro.",
+					type: "error",
+					confirmButtonText: "Aceptar"
+				});
+			}else{
+				document.getElementById('link').setAttribute('href','/pedidos/entregas/'+valor+'/');
+			}
+		}
 	div(class="container-fluid")
 		div(class="row" style="background: #465669;")
 			div(class="col-md-3 text-center" style="background: #4e6075;") 
@@ -20,11 +59,11 @@ block content
 				label(class="col-sm-2 text-right control-label") Filtrar por:
 				div(class="col-sm-2 text-left" )
 					select(name="filtro_por" class="form-control" id="filtro")
-						option(value="modelo") Nº Pedido
-						option(value="precio") Nombre cliente
+						option(value="pedido") Nº Pedido
+						option(value="cliente") Nombre cliente
 				div(class="col-sm-2")
 					input(type="text" class="col-sm-2 form-control" id="valor" placeholder="Valor de busqueda")
-				a(href="#" style="color:white;" class="btn btn-info fa fa-search" id="link" onclick="")   Buscar
+				a(href="#" style="color:white;" class="btn btn-info fa fa-search" id="link" onclick="buscarPedido();")   Buscar
 			div(class="row" style="margin-top:2em;")
 						table(class="table table-striped")
 							thead
@@ -41,17 +80,24 @@ block content
 							tbody
 								each pedido in pedidos
 									tr
-										td(style="text-align:center;" contenteditable=false) #{pedido.no_folio}
+										td(style="text-align:center;" contenteditable=false) #{pedido.no_pedido}
 										td(style="text-align:center;" contenteditable=false) #{pedido.fecha}
 										td(style="text-align:center;" contenteditable=false) #{pedido.nombre}
 										td(style="text-align:center;" contenteditable=false) #{pedido.telefono}
 										td(style="text-align:center;" contenteditable=false) #{pedido.correo}
 										td(style="text-center")
-											select(class="form-control text-center")
-												option(value="Pendiente") Pendiente
-												option(value="Terminado") Terminado
+											select(class="form-control text-center" id="select_pedido" onchange="entregarPedido(#{pedido.no_pedido});")
+												-if(pedido.estado_pedido == "terminado"){
+														option(value="terminado") Terminado
+														option(value="entregado") Entregado
+												-}else if(pedido.estado_pedido == "entregado"){
+													option() Entregado
+												-}else{
+													option() #{pedido.estado_pedido}
+												-}
+												
 										td(style="text-align:center;")
-											a(href="#" style="color:white;" class="btn btn-success fa fa-user-plus" onClick="window.open('/nota_venta/'+#{pedido.no_folio}+'/','height=800,width=1000');")  Ver nota de venta
+											a(href="#" style="color:white;" class="btn btn-success fa fa-user-plus" onClick="window.open('/nota_venta/'+#{pedido.no_pedido}+'/','height=800,width=1000');")  Ver nota de venta
 										td(style="text-align:center;")
 											a(href="#" style="color:white;" class="btn btn-info fa fa-user-plus")  Solicitar factura
 
