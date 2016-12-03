@@ -322,7 +322,7 @@ router.route('/pedidos/pendientes/:no_pedido?/')
                 });
             }
         }else{
-            connectionMySql.query("select *from pedidos join clientes on pedidos.id_cliente=clientes.id_cliente order by no_pedido desc, estado_pedido LIMIT 20",function(error, rows){
+            connectionMySql.query("select *from pedidos join clientes on pedidos.id_cliente=clientes.id_cliente where pedidos.estado_pedido != 'entregado' order by no_pedido desc, estado_pedido LIMIT 20",function(error, rows){
                 var pedidos = JSON.parse(JSON.stringify(rows));
                 console.log(pedidos)
                 res.render('empleado_mostrador/pedidosPendientes',{pedidos: pedidos});
@@ -590,7 +590,7 @@ router.route('/factura/:no_pedido?/')
         console.log('GET /factura/:no_pedido');
         connectionMySql.query("select * from pedidos join clientes on pedidos.id_cliente = clientes.id_cliente where no_pedido=?;",[req.params.no_pedido],function(error, rows){
             var pedido = JSON.parse(JSON.stringify(rows));
-            connectionMySql.query("select * from modelos_pedido where no_pedido=?",[req.params.no_pedido], function(error,rows){
+            connectionMySql.query("select * from modelos_pedido join modelos on modelos_pedido.id_modelo = modelos.id_modelo where no_pedido=?;",[req.params.no_pedido], function(error,rows){
                 var modelos_pedido = JSON.parse(JSON.stringify(rows));
                 // console.log("this-<"+modelos_pedido)
                 res.render('contador/informacionPedido', {pedido: pedido[0], modelos_pedido: modelos_pedido});
@@ -630,13 +630,12 @@ router.get('/send/factura_pdf/:filename/:correo/:no_pedido', isLoggedIn, functio
         path: './facturas/'+req.params.filename,
         contentType: 'application/pdf'}]
     };
-
     transporter.sendMail(mailOptions, function(error, info){
         if(error){
             console.log(error);
         }else{
             console.log('Message sent: ' + info.response);
-            res.redirect('/factura/'+req.params.no_pedido)
+            res.redirect('/redirect_user');
         };
     });
 });

@@ -122,7 +122,7 @@ block content
 							label(class="col-sm-2 control-label") Archivo factura(pdf):
 							div(class="col-sm-4")
 								input(type="hidden" name="no_pedido" value="#{pedido.no_pedido}")
-								input(type="file" class="form-control " name="factura_pdf" required value="#{pedido.filename_factura}") 
+								input(type="file" class="form-control " name="factura_pdf" required value="#{pedido.filename_factura}"  accept="application/pdf") 
 							div(class="col-sm-2")
 								button(type="submit" class="btn btn-primary") Subir factura
 						-if(pedido.factura == 1){
@@ -133,4 +133,6 @@ block content
 								button(type="button" class="btn btn-success") 
 									a(href='/send/factura_pdf/'+pedido.filename_factura+'/'+pedido.correo+'/'+pedido.no_pedido) Enviar factura por correo
 						-}
+					div(class="col-sm-12 text-right")
+						a(href="/factura/lista/" class="btn btn-success fa fa-chevron-circle-left" )  Regresar
 						

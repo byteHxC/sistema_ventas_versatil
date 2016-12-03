@@ -114,7 +114,7 @@ block content
 												-}
 												
 										td(style="text-align:center;")
-											a(href="#" style="color:white;" class="btn btn-success fa fa-user-plus" onClick="window.open('/nota_venta/'+#{pedido.no_pedido}+'/','height=800,width=1000');")  Ver nota de venta
+											a(href="#" style="color:white;" class="btn btn-success fa fa-eye" onClick="window.open('/nota_venta/'+#{pedido.no_pedido}+'/','height=800,width=1000');")  Ver nota de venta
 										td(style="text-align:center;")
 											//- onsubmit="return solicitarFacturacion();"
 											
@@ -122,11 +122,13 @@ block content
 													form(method="post" action="/pedidos/entregas/") 
 														input(type="hidden" value="#{pedido.no_pedido}" name="no_pedido")
 														input(type="hidden" value="#{pedido.id_cliente}" name="id_cliente")
-														button(type="submit" class="btn btn-info fa fa-user-plus") Solicitar factura
+														button(type="submit" class="btn btn-info fa fa-share")  Solicitar factura
 											-}else if (pedido.factura == 0){
 												p Factura en proceso...
 											-}else if(pedido.factura == 1){
-												button(type="button") Ver factura
+												div(class="row text-center")
+													a(href="/factura_pdf/"+pedido.filename_factura class="btn btn-info fa fa-eye")
+													a(class="btn btn-info fa fa-envelope" href='/send/factura_pdf/'+pedido.filename_factura+'/'+pedido.correo+'/'+pedido.no_pedido)  
 											-}
 
 				div(class="row")
