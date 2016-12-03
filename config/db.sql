@@ -11,10 +11,11 @@ create table clientes(id_cliente int auto_increment primary key,nombre varchar(6
 
 create table modelos(id_modelo int auto_increment primary key, precio_unitario float not null, ruta_imagen varchar(50), descripcion varchar(500));
 
-create table pedidos(no_pedido int auto_increment primary key, fecha date not null,fecha_entrega date not null, total float not null, anticipo float not null, especificaciones varchar(1000), estado_pedido varchar(20), estado_disenio varchar(20), id_cliente int, foreign key(id_cliente) references clientes(id_cliente));
+create table pedidos(no_pedido int auto_increment primary key, fecha date not null,fecha_entrega date not null, total float not null, anticipo float not null, especificaciones varchar(1000), estado_pedido varchar(20), estado_disenio varchar(20), id_cliente int,factura tinyint(1) ,filename_factura varchar(50) , foreign key(id_cliente) references clientes(id_cliente));
 
 create table modelos_pedido(no_pedido int, id_modelo int, cantidad int not null,detalles varchar(500), subtotal float, primary key(no_pedido, id_modelo),foreign key(no_pedido) references pedidos(no_pedido), foreign key(id_modelo) references modelos(id_modelo));
 
-create table facturas(id_factura int auto_increment primary key, no_pedido int, factura_pdf tinyint(1),foreign key(no_pedido) references pedidos(no_pedido));
-
+-- use
+ 	alter table pedidos add column factura tinyint(1) default null;
+	alter table pedidos add column filename_factura varchar(50);
 

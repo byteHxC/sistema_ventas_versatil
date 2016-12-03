@@ -4,6 +4,28 @@ block content
 		html{
 			background-color: #ffffff;
 		}
+	script(src="../../../sweet_alerts/dist/sweetalert.min.js")
+	link( rel="stylesheet" type="text/css" href="../../../sweet_alerts/dist/sweetalert.css")
+	script().
+		function validar(form){
+			var message = "";
+			if(form.descripcion.value.length == 0){
+				message +="-Ingrese una descripción \n";
+			}
+			if(form.precio_unitario.value.length == 0){
+				message +="-Ingrese el precio unitario \n";
+			}
+			if(!(/^[0-9](\d)*(\.(\d)+)?$/.test(form.precio_unitario.value)) ){
+				message += "- El precio debe ser numerico positivo ejemplo: [10.5]."
+			}
+			if(message==""){
+				return true;
+			}else{
+				sweetAlert("Erorr de validación", message, "error");
+				return false;
+			}
+			
+		}
 	div(class="container")
 		div(class="panel panel-warning" style="margin-top:0.5em;")
 				div(class="panel-heading")
@@ -11,7 +33,7 @@ block content
 				div(class="panel-body" style="background:#f2f2f2;")
 						div(class="text-center")
 							img(src="../#{modelo[0].ruta_imagen}" class="model"  style="margin-bottom:2em; width:230px; height:230px;")
-						form(method="post" action="/catalogo/#{modelo[0].id_modelo}?_method=put" class="form-horizontal")
+						form(method="post" action="/catalogo/#{modelo[0].id_modelo}?_method=put" class="form-horizontal" onsubmit="return validar(this);")
 							div(class="form-group")
 								label(for="Modelo" class="col-sm-2 control-label") Modelo:
 								div(class="col-sm-4")

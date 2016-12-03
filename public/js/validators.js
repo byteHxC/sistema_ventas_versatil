@@ -61,7 +61,7 @@ function registrarPedido(){
 		fecha_entrega: document.getElementById('fecha_entrega').value
 	}
 
-	if( !(/^\d{4}\/\d{2}\/\d{2}$/.test(data_pedido.fecha_entrega)) ){
+	if(!(/^\d{4}\/\d{2}\/\d{2}$/.test(data_pedido.fecha_entrega)) ){
 		error_messages += "- La fecha de entrega debe tener formato yyyy/mm/dd. \n";
 	}
 	if(data_pedido.cliente_id.length == 0){
@@ -78,14 +78,22 @@ function registrarPedido(){
 	}else if(!(/^\d+(.\d)*$/.test(data_pedido.anticipo)) ){
 		error_messages += "- El anticipo debe ser numerico. \n";
 	}
+	// alert(parseFloat(parseFloat(data_pedido.total)/2));	
+	if(parseFloat(data_pedido.anticipo) > parseFloat(data_pedido.total)){
+		error_messages +="- El anticipo deber ser menor al total.\n";
+	}else if(parseFloat(data_pedido.anticipo) < parseFloat(parseFloat(data_pedido.total)/2)){
+		error_messages +="- El anticipo deber ser mayor al 50 % del total.\n";
+	}
+	
 
 	if(data_pedido.especificaciones.length == 0){
 		error_messages += "- Debe ingresar las especificaciones del pedido. \n";
 	}
 
+
 	if(error_messages == ""){
 		var data = {pedido: data_pedido, modelos_pedido: data_table};
-		var redirectWindow = window.open('/nota_venta/'+data.pedido.no_pedido+'/', 'popup');
+		var redirectWindow = window.open('/nota_venta/'+data_pedido.no_pedido+'/', 'popup');
 		$.ajax({
 		    url: "/pedido/add/",
 		    type: "POST",

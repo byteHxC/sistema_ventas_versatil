@@ -32,7 +32,7 @@ block content
 						   }
 						});
 						swal("Pedido entregado satisfactoriamente!", "...", "success"); 
-				   });
+			});
 		}
 		function buscarPedido(){
 			var filtro_por = document.getElementById('filtro').value;
@@ -47,6 +47,23 @@ block content
 			}else{
 				document.getElementById('link').setAttribute('href','/pedidos/entregas/'+valor+'/');
 			}
+		}
+		function solicitarFacturacion(){
+			var ret = false;
+			swal({   
+				   title: "¿Confirmar solicitud de facturación?",
+				   text: "Se enviaran los datos del cliente al contador.",   
+				   type: "info",   
+				   showCancelButton: true,   
+				   confirmButtonColor: "#DD6B55",   
+				   confirmButtonText: "Si, estoy seguro.",   closeOnConfirm: false 
+				   }, 
+				   function(){   
+						swal("Verificando datos del cliente...", "", "warning");
+						ret = true; 
+					}
+			);
+			return ret;
 		}
 	div(class="container-fluid")
 		div(class="row" style="background: #465669;")
@@ -99,7 +116,18 @@ block content
 										td(style="text-align:center;")
 											a(href="#" style="color:white;" class="btn btn-success fa fa-user-plus" onClick="window.open('/nota_venta/'+#{pedido.no_pedido}+'/','height=800,width=1000');")  Ver nota de venta
 										td(style="text-align:center;")
-											a(href="#" style="color:white;" class="btn btn-info fa fa-user-plus")  Solicitar factura
+											//- onsubmit="return solicitarFacturacion();"
+											
+											-if(pedido.factura == null){
+													form(method="post" action="/pedidos/entregas/") 
+														input(type="hidden" value="#{pedido.no_pedido}" name="no_pedido")
+														input(type="hidden" value="#{pedido.id_cliente}" name="id_cliente")
+														button(type="submit" class="btn btn-info fa fa-user-plus") Solicitar factura
+											-}else if (pedido.factura == 0){
+												p Factura en proceso...
+											-}else if(pedido.factura == 1){
+												button(type="button") Ver factura
+											-}
 
 				div(class="row")
 					div(class="col-sm-12 text-right" style="margin-bottom:2em;")

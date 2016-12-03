@@ -4,6 +4,23 @@ block content
 		html{
 			background-color: #ffffff;
 		}
+	script(src="../../../sweet_alerts/dist/sweetalert.min.js")
+	link( rel="stylesheet" type="text/css" href="../../../sweet_alerts/dist/sweetalert.css")
+	script().
+		function buscarPedido(){
+			var valor = document.getElementById('valor').value;
+			if(valor.length == 0 || valor==null){
+				swal({
+					title: "Error",
+					text: "Falta valor para el filtro.",
+					type: "error",
+					confirmButtonText: "Aceptar"
+				});
+			}else{
+				document.getElementById('link_to').setAttribute('href','/catalogo_lista/'+valor);
+			}
+		}
+
 	div(class="container")
 		div(class="panel panel-primary" style="margin-top:0.5em;")
 				div(class="panel-heading" style="background:#4e6073;")
@@ -13,6 +30,11 @@ block content
 						div(class="col-md-2")
 							a(href="/redirect_user" class="fa fa-undo" aria-hidden="true")   Regresar
 				div(class="panel-body" style="background:#cccccc;")
+					div(class="row" style="margin-top:2em;")
+						label(class="col-sm-2 text-right control-label") Buscar Nº de modelo:
+						div(class="col-sm-2")
+							input(type="text" class="col-sm-2 form-control" id="valor" placeholder="Valor de busqueda")
+						a(href="#" style="color:white;" class="btn btn-info fa fa-search" id="link_to" onclick="buscarPedido();")   Buscar
 					div(class="row" style="margin-bottom:2em;")
 						button(class="button text-center")
 						img(src="/icons/plus-2.png" class="icon")

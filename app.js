@@ -6,10 +6,19 @@ const express = require('express'),
 	flash = require('connect-flash'),
 	session = require('express-session'),
     multer = require('multer'),
-    upload = multer({dest: './uploads/'}),
+    upload_image = multer({dest: './uploads/'}),
+    upload_factura = multer({dest: './facturas/'}),
     request = require('request'),
     PDFDocument = require('pdfkit'),
     fs = require('fs');
+var nodemailer = require('nodemailer');
+var transporter = nodemailer.createTransport({
+        service: 'Gmail',
+        auth: {
+            user: 'versatil.invitaciones@gmail.com', // Your email id
+            pass: 'versatil.123' // Your password
+        }
+    });
 
 // connector myssql
 const connectionMySql = require('./config/database.js')
@@ -70,21 +79,32 @@ router.get('/redirect_user',isLoggedIn,function(req, res){
 });
 
 // Gestion de catalogo
-router.get('/catalogo',isLoggedIn, function(req, res){
-    connectionMySql.query("SELECT * FROM `modelos`",function(err,rows){
-        console.log('GET /catalogo/')
-        var json = JSON.parse(JSON.stringify(rows));
-        // console.log(json)
-        res.render('administrador/catalogo',{modelos: json});
-    });  
+router.get('/catalogo_lista/:filtro?/',isLoggedIn, function(req, res){
+    if(req.params.filtro){
+        console.log(req.params.filtro);
+         connectionMySql.query("SELECT * FROM modelos where id_modelo=?",[req.params.filtro],function(err,rows){
+            console.log('GET /catalogo/')
+            var json = JSON.parse(JSON.stringify(rows));
+            // console.log(json)
+            res.render('administrador/catalogo',{modelos: json});
+        });
+    }else{
+        connectionMySql.query("SELECT * FROM `modelos`",function(err,rows){
+            console.log('GET /catalogo/')
+            var json = JSON.parse(JSON.stringify(rows));
+            // console.log(json)
+            res.render('administrador/catalogo',{modelos: json});
+        });
+    }
+      
 });
 
-router.route('/catalogo/add')
+router.route('/catalogo/add/')
     .get(isLoggedIn, function(req, res){
         console.log('GET /catalogo/add')
         res.render('administrador/addModelo')
     })
-    .post(isLoggedIn,upload.single('imagen'),function(req, res){
+    .post(isLoggedIn,upload_image.single('imagen'),function(req, res){
         console.log("POST /catalogo/add");
         var data = [parseInt(req.body.precio_unitario),req.file.filename,req.body.descripcion];
         connectionMySql.query('INSERT INTO `modelos` (`precio_unitario`, `ruta_imagen`, `descripcion`) VALUES (?, ?, ?)', data, function(error){
@@ -183,7 +203,8 @@ router.route('/pedido/add/:id_cliente?/:modelos?')
                         }else{
                            var json = JSON.parse(JSON.stringify(rows));
                            connectionMySql.query("select auto_increment from information_schema.TABLES WHERE  table_name like 'pedidos';",function(error, rows){
-                                var no_pedido = JSON.parse(JSON.stringify(rows))[0].auto_increment;
+                                var no_pedido = JSON.parse(JSON.stringify(rows))[1].auto_increment;
+                                console.log('->'+rows[1]);
                                 console.log(no_pedido);
                                 res.render('empleado_mostrador/addPedido', {cliente: data_cliente, modelos: json,no_pedido: no_pedido});
                            });          
@@ -200,7 +221,7 @@ router.route('/pedido/add/:id_cliente?/:modelos?')
                 telefono: ''
             };
             connectionMySql.query("select auto_increment from information_schema.TABLES WHERE  table_name like 'pedidos';",function(error, rows){
-                var no_pedido = JSON.parse(JSON.stringify(rows))[0].auto_increment;
+                var no_pedido = JSON.parse(JSON.stringify(rows))[1].auto_increment;
                 res.render('empleado_mostrador/addPedido', {cliente: data_cliente, modelos: {},no_pedido: no_pedido});
            }); 
         }
@@ -211,7 +232,7 @@ router.route('/pedido/add/:id_cliente?/:modelos?')
         // console.log(req.body.pedido);
         var pedido = req.body.pedido
         var modelos_pedido = req.body.modelos_pedido;
-        connectionMySql.query('INSERT INTO pedidos (fecha, total, anticipo, especificaciones, estado_disenio, ruta_nota_venta, id_cliente, estado_pedido, fecha_entrega) VALUES (?, ?, ?, ?, ?, ?, ?, ?,?)', [pedido.fecha, pedido.total, pedido.anticipo, pedido.especificaciones,'pendiente','/',pedido.cliente_id,'pendiente', pedido.fecha_entrega], function(error, result, fields){
+        connectionMySql.query('INSERT INTO pedidos (fecha, total, anticipo, especificaciones, estado_disenio, id_cliente, estado_pedido, fecha_entrega) VALUES (?, ?, ?, ?, ?, ?, ?,?)', [pedido.fecha, pedido.total, pedido.anticipo, pedido.especificaciones,'pendiente',pedido.cliente_id,'pendiente', pedido.fecha_entrega], function(error, result, fields){
             if(error){
                 console.log(error.message);
                 res.status(400).send('#');
@@ -289,21 +310,21 @@ router.route('/pedidos/pendientes/:no_pedido?/')
                 console.log('out')
                 connectionMySql.query('select *from pedidos join clientes on pedidos.id_cliente=clientes.id_cliente where clientes.nombre like "%'+req.params.no_pedido+'%" LIMIT 20;',function(error, rows){
                     var pedidos = JSON.parse(JSON.stringify(rows));
-                    // console.log(pedidos)
+                    console.log(pedidos)
                     res.render('empleado_mostrador/pedidosPendientes',{pedidos: pedidos});
                 }); 
             }else{
                 console.log('in')
                 connectionMySql.query("select *from pedidos join clientes on pedidos.id_cliente=clientes.id_cliente where pedidos.no_pedido=? LIMIT 20;",[req.params.no_pedido],function(error, rows){
                     var pedidos = JSON.parse(JSON.stringify(rows));
-                    // console.log(pedidos)
+                    console.log(pedidos)
                     res.render('empleado_mostrador/pedidosPendientes',{pedidos: pedidos});
                 });
             }
         }else{
-            connectionMySql.query("select *from pedidos join clientes on pedidos.id_cliente=clientes.id_cliente LIMIT 20;",function(error, rows){
+            connectionMySql.query("select *from pedidos join clientes on pedidos.id_cliente=clientes.id_cliente order by no_pedido desc, estado_pedido LIMIT 20",function(error, rows){
                 var pedidos = JSON.parse(JSON.stringify(rows));
-                // console.log(pedidos)
+                console.log(pedidos)
                 res.render('empleado_mostrador/pedidosPendientes',{pedidos: pedidos});
             });
         }
@@ -325,7 +346,7 @@ router.route('/pedidos/entregas/:valor?/')
         console.log('/pedidos/entregas/');
         if(req.params.valor){
             if((/^[1-9](\d)*$/.test(req.params.valor))){
-                connectionMySql.query('select *from pedidos join clientes on pedidos.id_cliente=clientes.id_cliente where pedidos.no_pedido =?;',[req.params.valor],function(error, rows){
+                connectionMySql.query('select *from pedidos join clientes on pedidos.id_cliente=clientes.id_cliente where pedidos.no_pedido=? and pedidos.estado_pedido!="pendiente";',[req.params.valor],function(error, rows){
                     if(error){
                         console.log(error.message);
                     }else{
@@ -334,7 +355,7 @@ router.route('/pedidos/entregas/:valor?/')
                     }
                 });
             }else{
-                connectionMySql.query('select *from pedidos join clientes on pedidos.id_cliente=clientes.id_cliente where clientes.nombre like "%'+req.params.valor+'%";', function(error, rows){
+                connectionMySql.query('select *from pedidos join clientes on pedidos.id_cliente=clientes.id_cliente where clientes.nombre like "%'+req.params.valor+'%" and pedidos.estado_pedido!="pendiente";', function(error, rows){
                     if(error){
                         console.log(error.message);
                     }else{
@@ -345,7 +366,7 @@ router.route('/pedidos/entregas/:valor?/')
             }
             
         }else{
-            connectionMySql.query("select *from pedidos join clientes on pedidos.id_cliente=clientes.id_cliente limit 30;",function(error, rows){
+            connectionMySql.query("select *from pedidos join clientes on pedidos.id_cliente=clientes.id_cliente where pedidos.estado_pedido!='pendiente' limit 30;",function(error, rows){
                 var pedidos = JSON.parse(JSON.stringify(rows));
                 // console.log(pedidos)
                 res.render('administrador/entregaPedidos',{pedidos: pedidos});
@@ -361,6 +382,28 @@ router.route('/pedidos/entregas/:valor?/')
             else
                 res.status(200).send('/pedidos/entregas/');
         });
+    })
+    .post(isLoggedIn, function(req, res){
+        console.log('POST /pedidos/entregas/:valor?/');
+        connectionMySql.query('select * from clientes where id_cliente=?',[req.body.id_cliente], function(error,rows){
+            if(error){
+                console.log(error);
+            }else{
+                var cliente = JSON.parse(JSON.stringify(rows))[0];
+                console.log(cliente);
+                if(cliente.rfc == '' | cliente.curp =='' | cliente.calle == '' | cliente.no_ext == null | cliente.colonia == '' | cliente.codigo_postal == null | cliente.localidad == '' | cliente.municipio == '' | cliente.estado == '' ){
+                    res.render('administrador/clienteEdit', {cliente: cliente});
+                }else{
+                    connectionMySql.query('update pedidos set factura=? where no_pedido=?',[false, req.body.no_pedido], function(error,result,fields){
+                        if(error){
+                            console.log(error.message);
+                        }else{
+                            res.redirect('/pedidos/entregas/');
+                        }
+                    });
+                }
+            }
+        });
     });
 
 // MARK: - Agregar cliente
@@ -372,6 +415,7 @@ router.route('/cliente/add')
     .post(isLoggedIn, function(req, res){
         console.log('POST /cliente/add');
         var data = [req.body.nombre, req.body.telefono, req.body.correo, req.body.rfc, req.body.curp, req.body.calle, req.body.no_ext || null, req.body.no_int || null,req.body.colonia, req.body.codigo_postal || null, req.body.localidad, req.body.municipio, req.body.estado];
+        
         // console.log(data);
         connectionMySql.query('INSERT INTO `clientes` (nombre, telefono, correo, rfc, curp, calle, no_ext, no_int, colonia, codigo_postal, localidad, municipio, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', data, function(error,result,fields){
             if(error){
@@ -388,12 +432,23 @@ router.route('/cliente/add')
                             correo: rows[0].correo
                         }
                         connectionMySql.query("select auto_increment from information_schema.TABLES WHERE  table_name like 'pedidos';",function(error, rows){
-                            var no_pedido = JSON.parse(JSON.stringify(rows))[0].auto_increment;
+                            var no_pedido = JSON.parse(JSON.stringify(rows))[1].auto_increment;
                             console.log(no_pedido);
                             res.render('empleado_mostrador/addPedido', {cliente: json, modelos: {},no_pedido: no_pedido});
                        });
                     }
                 });
+            }
+        });
+    })
+    .put(isLoggedIn, function(req, res){
+        console.log('PUT /cliente/add');
+        var data = [req.body.telefono, req.body.correo, req.body.rfc, req.body.curp, req.body.calle, req.body.no_ext || null, req.body.no_int || null,req.body.colonia, req.body.codigo_postal || null, req.body.localidad, req.body.municipio, req.body.estado,req.body.id_cliente];
+         connectionMySql.query('update clientes set telefono=?, correo=?, rfc=?, curp=?, calle=?, no_ext=?, no_int=?, colonia=?, codigo_postal=?, localidad=?, municipio=?, estado=? where id_cliente=?', data, function(error,result,fields){
+            if(error){
+                console.log(error.message);
+            }else{
+                res.redirect('/pedidos/entregas/');
             }
         });
     });
@@ -434,7 +489,7 @@ router.get('/cliente_seleccionado/:id_cliente/', isLoggedIn, function(req, res){
                 correo: rows[0].correo
             }
             connectionMySql.query("select auto_increment from information_schema.TABLES WHERE  table_name like 'pedidos';",function(error, rows){
-                var no_pedido = JSON.parse(JSON.stringify(rows))[0].auto_increment;
+                var no_pedido = JSON.parse(JSON.stringify(rows))[1].auto_increment;
                 console.log(no_pedido);
                 res.render('empleado_mostrador/addPedido', {cliente: json, modelos: {},no_pedido: no_pedido});
            });
@@ -485,7 +540,7 @@ router.get('/disenios/lista/:filtro?', isLoggedIn, function(req, res){
             });
         }
     }else{
-        connectionMySql.query("select *from pedidos limit 20;",function(error, rows){
+        connectionMySql.query("select *from pedidos order by estado_disenio desc limit 20;",function(error, rows){
             var pedidos = JSON.parse(JSON.stringify(rows));
             // console.log(pedidos)
             res.render('diseniador/listaDisenios',{pedidos: pedidos});
@@ -521,15 +576,72 @@ router.route('/disenio/:no_pedido/:estado?')
 // Lista de facturas a realizar
 router.get('/factura/lista/', isLoggedIn, function(req, res){
     // mandar las factoruas de la base de datos
+    // select *from pedidos where factura=0;
     console.log('GET /factura/lista/');
-    res.render('contador/listaFacturas')
+    connectionMySql.query("select *from pedidos where factura=0;",function(error, rows){
+        var pedidos = JSON.parse(JSON.stringify(rows));
+        res.render('contador/listaFacturas', {pedidos: pedidos});
+    });
+    
 
 });
-router.get('/factura/:no_pedido/', isLoggedIn, function(req, res){
-    console.log('GET /factura/:no_pedido');
-    res.render('contador/informacionPedido');
-
+router.route('/factura/:no_pedido?/')
+    .get( isLoggedIn, function(req, res){
+        console.log('GET /factura/:no_pedido');
+        connectionMySql.query("select * from pedidos join clientes on pedidos.id_cliente = clientes.id_cliente where no_pedido=?;",[req.params.no_pedido],function(error, rows){
+            var pedido = JSON.parse(JSON.stringify(rows));
+            connectionMySql.query("select * from modelos_pedido where no_pedido=?",[req.params.no_pedido], function(error,rows){
+                var modelos_pedido = JSON.parse(JSON.stringify(rows));
+                // console.log("this-<"+modelos_pedido)
+                res.render('contador/informacionPedido', {pedido: pedido[0], modelos_pedido: modelos_pedido});
+            });
+        }); 
+    })
+    .post(isLoggedIn, upload_factura.single('factura_pdf'), function(req, res){
+        console.log('POST /factura/:no_pedido');
+        console.log(req.file);
+        var data = [req.file.filename,true, req.body.no_pedido];
+        connectionMySql.query('update pedidos set filename_factura=?, factura=? where no_pedido=?', data, function(error){
+            if(error){
+                console.log(error.message);
+            }else{
+                res.redirect('/factura/'+req.body.no_pedido+'/');
+            }
+        });
+    });
+router.get('/factura_pdf/:filename/', isLoggedIn, function(req, res){
+    console.log('GET /factura_pdf/:filename/');
+    var ruta_nota_venta = __dirname+'/facturas/'+req.params.filename;
+    fs.readFile(ruta_nota_venta , function (err,data){
+        res.contentType("application/pdf");
+        res.send(data);
+    });
 });
+
+router.get('/send/factura_pdf/:filename/:correo/:no_pedido', isLoggedIn, function(req, res){
+    console.log('GET /send/factura_pdf/:filename/:correo/:no_pedido');
+    console.log(req.params);
+    var mailOptions = {
+        from: 'versatil.invitaciones@gmail.com', // sender address
+        to: req.params.correo, // list of receivers
+        subject: 'Factura de venta Versatil', // Subject line
+        text: 'Gracias por su preferencia .l.',
+        attachments: [{filename: 'factura'+req.params.no_pedido+'.pdf',
+        path: './facturas/'+req.params.filename,
+        contentType: 'application/pdf'}]
+    };
+
+    transporter.sendMail(mailOptions, function(error, info){
+        if(error){
+            console.log(error);
+        }else{
+            console.log('Message sent: ' + info.response);
+            res.redirect('/factura/'+req.params.no_pedido)
+        };
+    });
+});
+
+
 app.use(router);
 app.use(function(req, res){
 	res.status(400);

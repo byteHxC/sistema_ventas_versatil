@@ -23,63 +23,63 @@ block content
 					div(class="form-group" )
 						label(for="Nombre cliente" class="col-sm-2 control-label") Nombre completo*:
 						div(class="col-sm-10")
-							input(type="text" class="form-control " name="nombre" placeholder="Nombre completo" readonly)
+							input(type="text" class="form-control " name="nombre" placeholder="Nombre completo" readonly value="#{pedido.nombre}")
 					div(class="form-group")
 						label(for="correo cliente" class="col-sm-2 control-label") Correo*:
 						div(class="col-sm-4")
-							input(type="email" class="form-control " name="correo" placeholder="Correo" readonly)
+							input(type="email" class="form-control " name="correo" placeholder="Correo" readonly value="#{pedido.correo}")
 						label(for="telefono" class="col-sm-2 control-label text-left") Telefono*:
 						div(class="col-sm-4")
-							input(type="tel" class="text-left form-control " name="telefono" placeholder="Telefono" readonly)
+							input(type="tel" class="text-left form-control " name="telefono" placeholder="Telefono" readonly value="#{pedido.telefono}")
 					div(class="form-group")
 						label(for="rfc cliente" class="col-sm-2 control-label") RFC:
 						div(class="col-sm-4")
-							input(type="text" class="form-control " name="rfc" placeholder="RFC" readonly)
+							input(type="text" class="form-control " name="rfc" placeholder="RFC" readonly value="#{pedido.rfc}")
 						label(for="curp cliente" class="col-sm-2 control-label text-left") CURP:
 						div(class="col-sm-4")
-							input(type="text" class="text-left form-control " name="curp" placeholder="Curp" readonly) 
+							input(type="text" class="text-left form-control " name="curp" placeholder="Curp" readonly value="#{pedido.curp}") 
 					div(class="form-group")
 						label(for="calle cliente" class="col-sm-2 control-label") Calle:
 						div(class="col-sm-2")
-							input(type="text" class="form-control " name="calle" placeholder="Calle" readonly)
+							input(type="text" class="form-control " name="calle" placeholder="Calle" readonly value="#{pedido.calle}")
 						div(class="col-sm-8 text-left")
 							label(for="no_ext cliente" class="col-sm-2 control-label text-left") No. exterior:
 							div(class="col-sm-3")
-								input(type="text" class="text-left form-control " name="no_ext" placeholder="Numero exterior" readonly)
+								input(type="text" class="text-left form-control " name="no_ext" placeholder="Numero exterior" readonly value="#{pedido.no_ext}")
 							label(for="no_int cliente" class="col-sm-2 control-label text-left") No. interior:
 							div(class="col-sm-3")
-								input(type="text" class="text-left form-control" name="no_int" placeholder="Numero interior" readonly)
+								input(type="text" class="text-left form-control" name="no_int" placeholder="Numero interior" readonly value="#{pedido.no_int}")
 					div(class="form-group")
 						label(for="colinia cliente" class="col-sm-2 control-label") Colonia:
 						div(class="col-sm-4")
-							input(type="text" class="form-control " name="colonia" placeholder="Colonia" readonly)
+							input(type="text" class="form-control " name="colonia" placeholder="Colonia" readonly value="#{pedido.colonia}")
 						label(for="codigo postal cliente" class="col-sm-2 control-label text-left") Código postal:
 						div(class="col-sm-4")
-							input(type="text" class="text-left form-control " name="codigo_postal" placeholder="Código postal" readonly)
+							input(type="text" class="text-left form-control " name="codigo_postal" placeholder="Código postal" readonly value="#{pedido.codigo_postal}")
 					div(class="form-group")
 						label(for="localidad cliente" class="col-sm-2 control-label") Localidad:
 						div(class="col-sm-4")
-							input(type="text" class="form-control " name="localidad" placeholder="Localidad" readonly)
+							input(type="text" class="form-control " name="localidad" placeholder="Localidad" readonly value="#{pedido.localidad}")
 						label(for="Municipio cliente" class="col-sm-2 control-label text-left") Municipio:
 						div(class="col-sm-4")
-							input(type="text" class="text-left form-control " name="municipio" placeholder="municipio" readonly)
+							input(type="text" class="text-left form-control " name="municipio" placeholder="municipio" readonly value="#{pedido.municipio}")
 					div(class="form-group")
 						label(for="estado cliente" class="col-sm-2 control-label") Estado:
 						div(class="col-sm-4")
-							input(type="text" class="form-control " name="estado" placeholder="Estado" readonly)
+							input(type="text" class="form-control " name="estado" placeholder="Estado" readonly value="#{pedido.estado}")
 		div(class="container" )
 			div(class="panel panel-default" )
 				div(class="panel-heading")
 					h4 Datos del pedido
 				div(class="panel-body form-horizontal")
 					div(class="form-group" )
-						label(class="col-sm-2 control-label") Nº folio:
+						label(class="col-sm-2 control-label") Nº pedido:
 						div(class="col-sm-4")
-							input(type="text" class="form-control " name="no_pedido" readonly)
+							input(type="text" class="form-control " readonly value="#{pedido.no_pedido}")
 					div(class="form-group")
 						label(class="col-sm-2 control-label") Fecha:
 						div(class="col-sm-4")
-							input(type="text" class="form-control " name="fecha" readonly)
+							input(type="text" class="form-control " name="fecha" readonly value="#{pedido.fecha}")
 					div(class=" form-group")
 						div(class="col-sm-1")
 						div(class="col-sm-10")
@@ -92,16 +92,17 @@ block content
 										th(style="text-align:center;") Precio unitario
 										th(style="text-align:center;") Subtotal
 								tbody
-									tr
-										td(style="text-align:center;" contenteditable=false) 001
-										td(style="text-align:center;" contenteditable=false) ....
-										td(style="text-align:center;" contenteditable=false) 40
-										td(style="text-align:center;" contenteditable=false) 58$
-										td(style="text-align:center;" contenteditable=false) 5400$
+									each modelo in modelos_pedido
+										tr
+											td(style="text-align:center;" contenteditable=false) #{modelo.id_modelo}
+											td(style="text-align:center;" contenteditable=false) #{modelo.detalles}
+											td(style="text-align:center;" contenteditable=false) #{modelo.cantidad}
+											td(style="text-align:center;" contenteditable=false) #{modelo.precio_unitario}
+											td(style="text-align:center;" contenteditable=false) #{modelo.subtotal}
 					div(class="form-group")
 						label(class="col-sm-2 control-label") Subtotal:
 						div(class="col-sm-4")
-							input(type="text" class="form-control " name="subtotal" readonly)
+							input(type="text" class="form-control " name="subtotal" readonly value="#{pedido.total}")
 					div(class="form-group")
 						label(class="col-sm-2 control-label") IVA:
 						div(class="col-sm-4")
@@ -116,13 +117,20 @@ block content
 				div(class="panel-heading")
 					h4 Factura
 				div(class="panel-body form-horizontal")
-					div(class="form-group")
-						label(class="col-sm-2 control-label") Archivo factura(pdf):
-						div(class="col-sm-4")
-							input(type="file" class="form-control " name="imagen" required accept=".pdf")
-						div(class="col-sm-2")
-							button(type="submit" class="btn btn-primary") Subir factura
-					div(class="form-group")
-						div(class="col-sm-12 text-right")
-							button(class="btn btn-success" style="margin-right: 2em;") Ver factura
-							button(class="btn btn-success") Enviar factura por correo
+					form(method="post" action="/factura/" class="form-horizontal" enctype="multipart/form-data")
+						div(class="form-group")
+							label(class="col-sm-2 control-label") Archivo factura(pdf):
+							div(class="col-sm-4")
+								input(type="hidden" name="no_pedido" value="#{pedido.no_pedido}")
+								input(type="file" class="form-control " name="factura_pdf" required value="#{pedido.filename_factura}") 
+							div(class="col-sm-2")
+								button(type="submit" class="btn btn-primary") Subir factura
+						-if(pedido.factura == 1){
+							div(class="form-group")
+							div(class="col-sm-12 text-right")
+								button(type="button" class="btn btn-success" style="margin-right: 2em;") 
+									a(href="/factura_pdf/#{pedido.filename_factura}") Ver factura
+								button(type="button" class="btn btn-success") 
+									a(href='/send/factura_pdf/'+pedido.filename_factura+'/'+pedido.correo+'/'+pedido.no_pedido) Enviar factura por correo
+						-}
+						

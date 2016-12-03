@@ -76,7 +76,8 @@ block content
 								th(style="text-align:center;") Nombre cliente
 								th(style="text-align:center;") Telefono cliente
 								th(style="text-align:center;") Correo cliente
-								th(style="text-align:center;") Estado
+								th(style="text-align:center;") Estado pedido
+								th(style="text-align:center;") Estado diseño
 
 						tbody
 							each pedido in pedidos
@@ -88,13 +89,18 @@ block content
 									td(style="text-align:center;" contenteditable=false) #{pedido.correo}
 									td(style="text-align:center;" contenteditable=false)
 										select(class="form-control" onchange="pedidoTerminado(#{pedido.no_pedido});")
-											// h1=pedido.estado_pedido
 											- if(pedido.estado_pedido == "pendiente"){
-												option(value="pendiente") Pendiente
-												option(value="terminado") Terminado
+												-if(pedido.estado_disenio == "autorizado"){
+													option(value="pendiente") Pendiente
+													option(value="terminado") Terminado
+												-}else{
+													option() #{pedido.estado_pedido}
+												-}
 											-}else if(pedido.estado_pedido == "terminado"){
 												option() Terminado
 											-}
+									td(style="text-align:center;" contenteditable=false) #{pedido.estado_disenio}
+
 
 											
 

@@ -14,25 +14,49 @@ block content
 		function buscarPedido(){
 			var filtro_por = document.getElementById('filtro').value;
 			var valor = document.getElementById('valor').value;
-			if(valor.length == 0 || valor==null){
+			var messages = "";
+			if(filtro_por == "pedido"){
+				if(!(/^[1-9](\d)*$/.test(valor))){
+					messages +="El numero de pedido debe ser entero positivo.";
+				}
+			}
+			if(filtro_por == "estado"){
+				if(!(/^[a-zA-Z]+$/.test(valor))){
+					messages +="El nombre del estado debe ser una cadena [pendiente, revision, autorizado]";
+				}
+			}
+			if(messages == ""){
+				if(valor.length == 0 || valor==null){
+					swal({
+						title: "Error",
+						text: "Falta valor para el filtro.",
+						type: "error",
+						confirmButtonText: "Aceptar"
+					});
+				}else{
+					document.getElementById('link').setAttribute('href','/disenios/lista/'+valor+'/');
+				}
+			}else{
 				swal({
 					title: "Error",
-					text: "Falta valor para el filtro.",
+					text: messages,
 					type: "error",
 					confirmButtonText: "Aceptar"
 				});
-			}else{
-				document.getElementById('link').setAttribute('href','/disenios/lista/'+valor+'/');
 			}
+
+			
+			
 		}
 	div(class="container-fluid")
 		div(class="row" style="background: #465669;")
 			div(class="col-md-3 text-center" style="background: #4e6075;padding-bottom:0.5em;") 
 				h2(style="color:white;") Versatil - Diseñador
-				button(class="fa fa-user-times btn btn-danger")  
-					a(href="/logout/")  Cerrar sesion
-			div(class="col-md-9 text-center") 
+			div(class="col-md-7 text-center") 
 				h2(style="color:white;") Lista de diseños
+			div(class="col-md-2 text-center" style="margin-top:1em;")
+				button(class="fa fa-user-times btn btn-danger")  
+						a(href="/logout/")  Cerrar sesion
 		div(class="container")
 			div(class="row" style="margin-top:2em;")
 				label(class="col-sm-2 text-right control-label") Filtrar por:
