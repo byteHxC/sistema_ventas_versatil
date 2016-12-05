@@ -12,6 +12,11 @@ block content
 	script(src="../../js/parseTable.js")
 	script(src="../../../js/parseTable.js")
 	script(src="../../../js/validators.js")
+	script(src="../../../js/pikaday.js")
+	link( rel="stylesheet" type="text/css" href="../../../css/pikaday.css")
+
+		
+	
 	div(class="container-fluid")
 		div(class="row" style="background: #465669;")
 			div(class="col-md-3 text-center" style="background: #4e6075;") 
@@ -99,7 +104,9 @@ block content
 					div(class="form-group" style="margin-top:1em;")
 						label(for="fecha_entrega" class="col-sm-2 control-label") Fecha de entrega:
 						div(class="col-sm-2")
-							input(type="text" class="form-control " name="fecha_entrega" placeholder="aaaa/mm/dd" required id="fecha_entrega" )
+							input( class="form-control" name="fecha_entrega" type="text" id="datepicker" readonly placeholder="Seleccione una fecha")
+							script().
+								var picker = new Pikaday({ field: document.getElementById('datepicker'), format: 'YYYY/MM/DD',minDate: new Date()});
 					div(class="form-group")
 						label(class="col-sm-2")
 						div(class="col-sm-3")

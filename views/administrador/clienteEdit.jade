@@ -4,12 +4,63 @@ block content
 		html{
 			background-color: #ffffff;
 		}
+	script().
+		function validarCliente(form){
+			var messages = "";
+			if(!(form.nombre.value.length > 0)){
+				messages += "- El nombre es obligatorio.\n"
+			}
+			if(!(/^\w+@\w+\.\w{2,4}$/.test(form.correo.value))){
+				messages += "- El correo esta mal escrito\n"
+			}
+			if(!(/^\d{5,15}$/.test(form.telefono.value))){
+				messages += "- El telefono debe ser numerico, de 5 a 15 numeros.\n"
+			}
+			// campos no obligatorios
+			if(!/^([A-Z,Ñ]{3,4}([0-9]{2})(0[1-9]|1[0-2])(0[1-9]|1[0-9]|2[0-9]|3[0-1])[A-Z|\d]{3})$/.test(form.rfc.value)){
+				messages +="- Verificar RFC. \n";
+			}
+			if(!(/^[a-zA-Z]{4}((\d{2}((0[13578]|1[02])(0[1-9]|[12]\d|3[01])|(0[13456789]|1[012])(0[1-9]|[12]\d|30)|02(0[1-9]|1\d|2[0-8])))|([02468][048]|[13579][26])0229)(H|M)(AS|BC|BS|CC|CL|CM|CS|CH|DF|DG|GT|GR|HG|JC|MC|MN|MS|NT|NL|OC|PL|QT|QR|SP|SL|SR|TC|TS|TL|VZ|YN|ZS|SM|NE)([a-zA-Z]{3})([a-zA-Z0-9\s]{1})\d{1}$/.test(form.curp.value))){
+				messages += "- Verificar CURP. \n"
+			}
+			if(form.calle.value == ""){
+				messages += "- El campo calle es obligatorio\n.";
+			}
+			
+			if(!(/^\d{1,5}$/.test(form.no_ext.value))){
+				messages += "- Verificar el numero exterior, rango de [1,5] digitos.\n"
+			}
+			if(form.no_int.value != "" & !(/^\d{1,5}$/.test(form.no_int.value))){
+				messages += "- Verificar el numero exterior, rango de [1,5] digitos.\n"
+			}
+			if(form.colonia.value == ""){
+				messages += "- El campo colonia es obligatorio\n.";
+			}
+			if(!(/^\d[5]$/.test(form.codigo_postal.value))){
+				messages += "- El código postal debe tener 5 digitos .\n"
+			}
+			if(form.localidad.value == ""){
+				messages += "- El campo localidad es obligatorio\n.";
+			}
+			if(form.municipio.value == ""){
+				messages += "- El campo municipio es obligatorio.\n";
+			}
+			if(form.estado.value == ""){
+				messages += "- El campo estado es obligatorio.\n";
+			}
+			if(messages == ""){
+				return true;
+			}else{
+				alert(messages);
+				return false;
+			}
+		}
 	div(class="container")
 		div(class="panel panel-primary" style="margin-top:0.5em;")
 				div(class="panel-heading" style="background:#4e6073;")
 					h1(class="planel-title" style="font-size: 25px;text-align:center;") Editar cliente
 				div(class="panel-body" style="background:#f2f2f2;")
-						form(method="POST" action="/cliente/add/?_method=put" class="form-horizontal")
+						form(method="POST" action="/cliente/add/?_method=put" class="form-horizontal" onsubmit="return validarCliente(this);")
 							div(class="form-group")
 								label(for="Nombre cliente" class="col-sm-2 control-label") Nombre completo*:
 								div(class="col-sm-10")
@@ -69,7 +120,7 @@ block content
 									button(type="submit" class="btn btn-success")
 										span(class="fa fa-user-plus" aria-hidden="true")  Actualizar información
 								div(class="col-sm-2 text-left")
-									a(href="/pedido/add" class="btn btn-danger")
+									a(href="/pedidos/entregas/" class="btn btn-danger")
 										span(class="fa fa-times-circle")   Cancelar
 
 

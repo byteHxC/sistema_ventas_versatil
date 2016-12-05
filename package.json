@@ -26,6 +26,7 @@
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
     "pdfkit": "^0.8.0",
+    "pdfmake": "^0.1.18",
     "phantom": "^3.2.0",
     "request": "^2.79.0",
     "sendmail": "^1.0.0",

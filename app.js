@@ -11,6 +11,8 @@ const express = require('express'),
     request = require('request'),
     PDFDocument = require('pdfkit'),
     fs = require('fs');
+
+// config send mails
 var nodemailer = require('nodemailer');
 var transporter = nodemailer.createTransport({
         service: 'Gmail',
@@ -20,6 +22,8 @@ var transporter = nodemailer.createTransport({
         }
     });
 
+// config nota de venta
+var notaVenta = require('./config/nota');
 // connector myssql
 const connectionMySql = require('./config/database.js')
 
@@ -248,44 +252,12 @@ router.route('/pedido/add/:id_cliente?/:modelos?')
                     });
                 }
                 console.log('Generando nota de venta: notas_venta/'+result.insertId+'.pdf ....');
-                // Generar nota de venta
-                 var notaVenta = new PDFDocument;
-                // guardamos el pdf en notas_venta/:no_pedido
-                var ruta_nota_venta = 'notas_venta/'+result.insertId+'.pdf'
-                notaVenta.pipe(fs.createWriteStream(ruta_nota_venta));
-                notaVenta.font('Times-Roman')
-                    .fontSize(30)
-                    .text('Invitaciones versatil',100,100);
-                notaVenta.text('NOTA DE VENTA');
-                notaVenta.font('Times-Roman')
-                    .fontSize(16)
-                notaVenta.text('No. Pedido: ' + result.insertId);
-                notaVenta.text('Fecha: ' + pedido.fecha);
-                // console.log('send')
+                // // Generar nota de venta
                 getCliente(pedido.cliente_id, function(err, data_cliente){
-                    // console.log('in');
-                    notaVenta.text('Datos del cliente');
-                    notaVenta.text('Nombre: ' + data_cliente.nombre);
-                    notaVenta.text('Telefono: ' + data_cliente.telefono);
-                    notaVenta.text('Correo: ' + data_cliente.correo);
-                    notaVenta.text('Datos pedido' + '');
-                    notaVenta.text('Modelos:');
-                    notaVenta.text('Modelo | Detalles | Cantidad | Precio unitario | Subtotal');
-                        
-                    for(var i = 0; i < modelos_pedido.length; i++){
-                        console.log(modelos_pedido[i]); 
-                        notaVenta.text(modelos_pedido[i].Modelo+' | '+modelos_pedido[i].Detalles+' | '+modelos_pedido[i].Cantidad+' | '+modelos_pedido[i].Precio_unitario+' |'+modelos_pedido[i].Subtotal);
-                    }
-                    notaVenta.text('Total: ' + pedido.total);
-                    notaVenta.text('Anticipo: ' + pedido.anticipo);
-                    notaVenta.text('Fecha entrega: ' + pedido.fecha_entrega);
-                    
-                    notaVenta.end();
-                    
+                    notaVenta.generarNota({no_pedido: result.insertId, pedido: pedido, modelos_pedido: modelos_pedido, cliente: data_cliente});
+                    res.status(200).send('/redirect_user/');
                 });
-                res.status(200).send('/redirect_user/');
                  // res.status(200).send('/nota_venta/'+pedido.no_pedido+'/')
-               
             }
         });
     });

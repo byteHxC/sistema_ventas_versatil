@@ -58,7 +58,7 @@ function registrarPedido(){
 		total: document.getElementById('total').value,
 		anticipo: document.getElementById('anticipo').value,
 		especificaciones: document.getElementById('especificaciones').value,
-		fecha_entrega: document.getElementById('fecha_entrega').value
+		fecha_entrega: document.getElementById('datepicker').value
 	}
 
 	if(!(/^\d{4}\/\d{2}\/\d{2}$/.test(data_pedido.fecha_entrega)) ){
