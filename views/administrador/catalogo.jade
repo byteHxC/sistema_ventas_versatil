@@ -7,6 +7,22 @@ block content
 	script(src="../../../sweet_alerts/dist/sweetalert.min.js")
 	link( rel="stylesheet" type="text/css" href="../../../sweet_alerts/dist/sweetalert.css")
 	script().
+		function confirmacion(form){
+			var confirm = false;
+			swal({   
+				   title: "¿Seguro que desea eliminar este modelo?",
+				   text: "No se podra revertir este cambio.",   
+				   type: "warning",   
+				   showCancelButton: true,   
+				   confirmButtonColor: "#DD6B55",   
+				   confirmButtonText: "Si, estoy seguro.",   closeOnConfirm: false }, 
+				   function(){  
+						swal("Pedido entregado satisfactoriamente!", "...", "success"); 
+						form.submit();	
+					}
+			);
+			return false;
+		}
 		function buscarPedido(){
 			var valor = document.getElementById('valor').value;
 			if(valor.length == 0 || valor==null){
@@ -51,7 +67,7 @@ block content
 										br
 										strong Precio unitario: $ #{modelo.precio_unitario}
 										br
-										form(method="post" action="/catalogo/#{modelo.id_modelo}?_method=delete" class="dp")
+										form(method="post" action="/catalogo/#{modelo.id_modelo}?_method=delete" class="dp" onsubmit="return confirmacion(this);")
 											a(style='text-decoration:none;color:white;' href="/catalogo/#{modelo.id_modelo}" class="dp btn btn-warning") Editar
 											button( type="submit" class="btn btn-danger dp" name="id_modelo") Eliminar
 

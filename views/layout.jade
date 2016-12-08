@@ -8,6 +8,16 @@ html(lang="es")
 		link(href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet")
 		link(rel="stylesheet" href="/font-awesome/css/font-awesome.min.css")
 	body
+		header(id="main-header" style="border-bottom:1px solid #cccccc;")
+			a(id="logo-header" href="#")
+				span(class="site-name") Versatil
+				sapn(class="site-desc") Sistema de ventas.
+			nav()
+				ul
+					li
+						a(href="/") Inicio
+					li
+						a(href="/logout/") Cerrar sesión
 		block content
 	//- div(class="footer")
 	//- 	p Desarrollado en la materia de Gestión de proyectos de software ITChilpancigo

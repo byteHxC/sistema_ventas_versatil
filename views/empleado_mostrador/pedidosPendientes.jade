@@ -52,10 +52,8 @@ block content
 			}
 		}
 	div(class="container-fluid")
-		div(class="row" style="background: #465669;")
-			div(class="col-md-3 text-center" style="background: #4e6075;") 
-				h2(style="color:white;") Versatil
-			div(class="col-md-9 text-center") 
+		div(class="row" style="background: #4f6074;")
+			div(class="col-md-12 text-center") 
 				h2(style="color:white;") Lista de pedidos pendientes
 		div(class="container")
 			div(class="row" style="margin-top:2em;")
@@ -76,8 +74,8 @@ block content
 								th(style="text-align:center;") Nombre cliente
 								th(style="text-align:center;") Telefono cliente
 								th(style="text-align:center;") Correo cliente
-								th(style="text-align:center;") Estado pedido
 								th(style="text-align:center;") Estado diseño
+								th(style="text-align:center;") Estado pedido
 
 						tbody
 							each pedido in pedidos
@@ -87,6 +85,7 @@ block content
 									td(style="text-align:center;" contenteditable=false) #{pedido.nombre}
 									td(style="text-align:center;" contenteditable=false) #{pedido.telefono}
 									td(style="text-align:center;" contenteditable=false) #{pedido.correo}
+									td(style="text-align:center;" contenteditable=false) #{pedido.estado_disenio}
 									td(style="text-align:center;" contenteditable=false)
 										select(class="form-control" onchange="pedidoTerminado(#{pedido.no_pedido});")
 											- if(pedido.estado_pedido == "pendiente"){
@@ -99,7 +98,6 @@ block content
 											-}else if(pedido.estado_pedido == "terminado"){
 												option() Terminado
 											-}
-									td(style="text-align:center;" contenteditable=false) #{pedido.estado_disenio}
 
 
 											

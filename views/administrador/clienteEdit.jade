@@ -24,23 +24,23 @@ block content
 				messages += "- Verificar CURP. \n"
 			}
 			if(form.calle.value == ""){
-				messages += "- El campo calle es obligatorio\n.";
+				messages += "- El campo calle es obligatorio.\n";
 			}
 			
 			if(!(/^\d{1,5}$/.test(form.no_ext.value))){
 				messages += "- Verificar el numero exterior, rango de [1,5] digitos.\n"
 			}
-			if(form.no_int.value != "" & !(/^\d{1,5}$/.test(form.no_int.value))){
-				messages += "- Verificar el numero exterior, rango de [1,5] digitos.\n"
-			}
+			//- if(form.no_int.value != "" & !(/^\d{1,5}$/.test(form.no_int.value))){
+			//- 	messages += "- Verificar el numero interior, rango de [1,5] digitos.\n"
+			//- }
 			if(form.colonia.value == ""){
-				messages += "- El campo colonia es obligatorio\n.";
+				messages += "- El campo colonia es obligatorio.\n";
 			}
-			if(!(/^\d[5]$/.test(form.codigo_postal.value))){
+			if(!(/^\d{5}$/.test(form.codigo_postal.value))){
 				messages += "- El código postal debe tener 5 digitos .\n"
 			}
 			if(form.localidad.value == ""){
-				messages += "- El campo localidad es obligatorio\n.";
+				messages += "- El campo localidad es obligatorio.\n";
 			}
 			if(form.municipio.value == ""){
 				messages += "- El campo municipio es obligatorio.\n";
@@ -51,7 +51,8 @@ block content
 			if(messages == ""){
 				return true;
 			}else{
-				alert(messages);
+				document.getElementById('message').innerHTML=messages;
+				document.getElementById('alert').style.display = 'block';
 				return false;
 			}
 		}
@@ -61,6 +62,11 @@ block content
 					h1(class="planel-title" style="font-size: 25px;text-align:center;") Editar cliente
 				div(class="panel-body" style="background:#f2f2f2;")
 						form(method="POST" action="/cliente/add/?_method=put" class="form-horizontal" onsubmit="return validarCliente(this);")
+							div(class="alert alert-danger " role="alert" id="alert" hidden=true)
+								button(type="button" class="close" data-dismiss="alert" aria-label="Close")
+									span(aria-hidden="true") &times;
+								strong() Corrija los siguientes campos
+								pre(id="message" style="border:none; padding:none;background:none;color:#a74544;")
 							div(class="form-group")
 								label(for="Nombre cliente" class="col-sm-2 control-label") Nombre completo*:
 								div(class="col-sm-10")

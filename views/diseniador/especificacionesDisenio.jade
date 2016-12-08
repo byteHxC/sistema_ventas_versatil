@@ -35,11 +35,9 @@ block content
 			   });
 		}
 	div(class="container-fluid")
-		div(class="row" style="background: #465669;")
-			div(class="col-md-3 text-center" style="background: #4e6075;") 
-				h2(style="color:white;") Versatil - Diseñador
-			div(class="col-md-9 text-center") 
-				h2(style="color:white;") Especificaciones de diseño
+		div(class="row" style="background: #4f6074;")
+			div(class="col-md-12 text-center") 
+				h2(style="color:white;") Especificaciones de diseño - Diseñador
 		div(class="container")
 			div(class="row" style="margin-top:3em;")
 				label(for="no_pedido" class="col-sm-2 control-label") No. pedido:
@@ -82,7 +80,6 @@ block content
 									option(value="revision") Revision
 									option(value="autorizado") Autorizado
 								-}else if(pedido.estado_disenio == "revision"){
-									option(value="pendiente") Pendiente
 									option(selected  value="revision") Revision
 									option(value="autorizado") Autorizado
 								-}else if(pedido.estado_disenio == "autorizado"){

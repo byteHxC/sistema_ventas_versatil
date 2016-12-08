@@ -115,7 +115,7 @@ router.route('/catalogo/add/')
             if(error){
                 console.log(error.message);
             }else{
-                res.redirect('/catalogo')
+                res.redirect('/catalogo_lista')
             }
         });
     });
@@ -139,7 +139,7 @@ router.route('/catalogo/:id_modelo')
             if(error){
                 console.log(error.message);
             }else{
-                res.redirect('/catalogo')
+                res.redirect('/catalogo_lista')
             }
         });
     })
@@ -149,7 +149,7 @@ router.route('/catalogo/:id_modelo')
             if(error){
                 console.log(error.message);
             }else{
-                res.redirect('/catalogo')
+                res.redirect('/catalogo_lista')
             }
         });
     });
@@ -597,7 +597,7 @@ router.get('/send/factura_pdf/:filename/:correo/:no_pedido', isLoggedIn, functio
         from: 'versatil.invitaciones@gmail.com', // sender address
         to: req.params.correo, // list of receivers
         subject: 'Factura de venta Versatil', // Subject line
-        text: 'Gracias por su preferencia .l.',
+        text: 'Gracias por su preferencia.',
         attachments: [{filename: 'factura'+req.params.no_pedido+'.pdf',
         path: './facturas/'+req.params.filename,
         contentType: 'application/pdf'}]
