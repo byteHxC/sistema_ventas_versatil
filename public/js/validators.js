@@ -19,11 +19,12 @@ function calcularTotales(){
 	var tabla = document.getElementById('modelos_pedido');
 	var data_table = parseTable(tabla);
 	var total = 0;
+	console.log(data_table)
 	if(data_table.length == 0)
 		error_messages += "- El pedido debe tener modelo(s) registrado(s). \n";
 	for (var i = 0; i < data_table.length; i++) {
 		total += parseInt(data_table[i].Precio_unitario) * parseInt(data_table[i].Cantidad);
-		document.getElementById('modelo-'+data_table[i].Modelo).innerHTML=(parseInt(data_table[i].Precio_unitario) * parseInt(data_table[i].Cantidad)).toString();
+		document.getElementById('modelo-'+data_table[i].Modelo_id).innerHTML=(parseInt(data_table[i].Precio_unitario) * parseInt(data_table[i].Cantidad)).toString();
 		if( !(/^[1-9](\d)*$/.test(data_table[i].Cantidad)) ){
 			error_messages += "- La columna de cantidad de la tabla de modelos, debe contener un valor entero. \n"
 		}
@@ -102,8 +103,17 @@ function registrarPedido(){
 		    success: function(response) {
 		    	// alert(response)
 		    	if (response) {
-		        	window.location.href = response;
-		        	redirectWindow.location;
+		    		swal({
+						title: "Pedido agregado.",
+						text: "...",
+						type: "success",
+						confirmButtonText: "Aceptar"
+
+					}, function(){
+						window.location.href = response;
+			        	redirectWindow.location;
+					});
+		        	
 		        }
 		    },
 		    complete: function(xhr, statusText){

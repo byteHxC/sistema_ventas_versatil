@@ -6,8 +6,6 @@ block content
 		div(class="row header text-right" style="padding-bottom:0.7em;")
 			div(class="col-sm-10")
 			div(class="col-sm-2 text-center")
-				button(class="fa fa-user-times btn btn-danger")  
-					a(href="/logout/")  Cerrar sesion
 		div(class="row contenido")
 			div(class="col-md-4 ")
 			div(class="col-md-4 center-block")
@@ -18,6 +16,23 @@ block content
 					img(src="/icons/seating-guest.png" class="icon")
 					a(href="/catalogo_lista/") Gestionar catalogo
 			div(class="col-md-4")
+
+	
+	style().
+		.footer {
+		    position: fixed;
+		    bottom: 0;
+		    width: 100%;
+		    height: 10px;
+		    background: #f5f2f0;
+		    align: center;
+		    display: table;
+		    font-family: Helvetica, Arial, sans-serif;   
+		}
+	div(class="footer")
+		h1(style="font-size:1em;vertical-align: middle;text-align: center;") Interfaz 13 - Versatil
+			
+
 
 
 

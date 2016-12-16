@@ -6,6 +6,7 @@ block content
 		}
 	script(src="../../../sweet_alerts/dist/sweetalert.min.js")
 	link( rel="stylesheet" type="text/css" href="../../../sweet_alerts/dist/sweetalert.css")
+	
 	script().
 		function confirmacion(form){
 			var confirm = false;
@@ -15,9 +16,10 @@ block content
 				   type: "warning",   
 				   showCancelButton: true,   
 				   confirmButtonColor: "#DD6B55",   
-				   confirmButtonText: "Si, estoy seguro.",   closeOnConfirm: false }, 
+				   confirmButtonText: "Si, estoy seguro.",   
+				   closeOnConfirm: false }, 
 				   function(){  
-						swal("Pedido entregado satisfactoriamente!", "...", "success"); 
+						swal("Eliminando...!","..", "success"); 
 						form.submit();	
 					}
 			);
@@ -41,7 +43,7 @@ block content
 		div(class="panel panel-primary" style="margin-top:0.5em;")
 				div(class="panel-heading" style="background:#4e6073;")
 					div(class="row")
-						h1(class="planel-title" style="font-size: 25px;text-align:center;") Catálogo de invitaciones
+						h1(class="planel-title" style="font-size:2em;text-align:center;") Catálogo de invitaciones
 						div(class="col-md-10")
 						div(class="col-md-2")
 							a(href="/redirect_user" class="fa fa-undo" aria-hidden="true")   Regresar
@@ -49,7 +51,7 @@ block content
 					div(class="row" style="margin-top:2em;")
 						label(class="col-sm-2 text-right control-label") Buscar Nº de modelo:
 						div(class="col-sm-2")
-							input(type="text" class="col-sm-2 form-control" id="valor" placeholder="Valor de busqueda")
+							input(type="number" min="1" class="col-sm-2 form-control" id="valor" placeholder="Valor de busqueda")
 						a(href="#" style="color:white;" class="btn btn-info fa fa-search" id="link_to" onclick="buscarPedido();")   Buscar
 					div(class="row" style="margin-bottom:2em;")
 						button(class="button text-center")
@@ -70,6 +72,24 @@ block content
 										form(method="post" action="/catalogo/#{modelo.id_modelo}?_method=delete" class="dp" onsubmit="return confirmacion(this);")
 											a(style='text-decoration:none;color:white;' href="/catalogo/#{modelo.id_modelo}" class="dp btn btn-warning") Editar
 											button( type="submit" class="btn btn-danger dp" name="id_modelo") Eliminar
+	div(style="border-top:3em;")
+		p(style="color:white;") .
+	style().
+		.footer {
+		    position: fixed;
+		    bottom: 0;
+		    width: 100%;
+		    height: 10px;
+		    background: #f5f2f0;
+		    align: center;
+		    display: table;
+		    font-family: Helvetica, Arial, sans-serif;   
+		}
+	div(class="footer")
+		h1(style="font-size:1em;vertical-align: middle;text-align: center;") Interfaz 15 - Versatil
+			
+
+
 
 
 

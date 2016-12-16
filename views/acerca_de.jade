@@ -1,0 +1,83 @@
+doctype html
+html(lang="en")
+	head
+		title Sistema de ventas Versatil
+		link(href="/css/bootstrap.css" rel="stylesheet")
+		link(href="/css/bootstrap-theme.css" rel="stylesheet")
+		link(href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet")
+		style().
+			html{
+				position: relative; 
+				min-height: 100%;
+			}
+			body{
+				background-image: url('/img/ba.jpg');
+				background-size: cover;
+				position: relative;
+				font-family: 'Raleway', sans-serif;
+				margin: 0;
+			  	margin-bottom: 40px;
+			  	/*display: table;*/
+			  	/*width: 100%;*/
+			}
+			.box-img{
+				background-color: black;
+				margin-top: 10em;
+				opacity: 0.8;
+				border-radius: 10px 10px 10px 10px;
+				color:white;
+			}
+			.box{
+			  	left: 0;
+			 	right: 0;
+			 	z-index: 9999;
+			 	margin-left: 20px;
+			 	margin-right: 20px;
+			}
+			img{
+				width: 500px;
+				height: 300px;
+			}
+			button{
+				margin-top: 1.5em;
+				margin-right: 1em;
+				border-radius: 129px 129px 129px 129px;
+				background: none;
+				border: 1px solid #ffffff;
+				color: white;
+				width: 8em;
+				height: 2em;
+				font-size: 18px;
+			}
+	body()
+		div(class="container")
+			div(class="row")
+				div(class="col-md-8")
+				div(class="col-md-4 text-right")
+					button()
+							a(href="/") Inicio
+					-if(authenticate){
+						button()
+							a(href="/redirect_user/") Principal
+						button() 
+							a(href="/logout") Cerrar sesión
+
+					-}else{
+						button()
+							a(href="/login") Iniciar sesión
+					-}	
+			div(class="box-img block-center text-center")
+				h1 INSTITUTO TECNOLÓGICO DE CHILPANCINGO 
+				H2 INGENIERÍA EN SISTEMAS COMPUTACIONALES	
+				H2 Gestión de proyectos de software
+				H2 Proyecto: Gestión de Ventas Versatil
+
+				h3 Integrantes del equipo:
+				div(class="row")
+					label(class="col-sm-2")
+					ul(class="list-group col-sm-8 text-center" style="")
+						li(class="list-group-item"  style="color:black;") Francisco Blanco Romero - Nº control: 13520424
+						li(class="list-group-item" style="color:black;") Samuel Adrian Molina Derramona - Nº control: 13520436
+						li(class="list-group-item" style="color:black;") Martha Radilla Rosales - Nº control: 13520448
+						li(class="list-group-item" style="color:black;") Gregorio Ramírez Bustamante - Nº control: 12520166
+

@@ -12,32 +12,36 @@ block content
 	script(src="../../../sweet_alerts/dist/sweetalert.min.js")
 	link( rel="stylesheet" type="text/css" href="../../../sweet_alerts/dist/sweetalert.css")
 	script().
-		function cambiarEstado(no_pedido){
+		function cambiarEstado(no_pedido,combo){
 			swal({   
 			   title: "¿Confirmación de cambio de estado", 
 			   type: "warning",   
 			   showCancelButton: true,   
 			   confirmButtonColor: "#DD6B55",   
 			   confirmButtonText: "Si, estoy seguro.",   closeOnConfirm: false }, 
-			   function(){   
-				   	$.ajax({
-					   url: '/disenio/'+no_pedido+'/'+document.getElementById('select_estado').value+'/?_method=put',
-					   type: 'POST',
-					   success: function(response) {
+			   function(isConfirm){   
+			   		if(isConfirm){
+			   			$.ajax({
+						   url: '/disenio/'+no_pedido+'/'+document.getElementById('select_estado').value+'/?_method=put',
+						   type: 'POST',
+						   success: function(response) {
 
-						    if (response) {
-					        	window.location.href = response;
-					        	redirectWindow.location;
-					        }
-					   }
-					});
-					swal("Estado del pedido cambiado!","Listo","success"); 
+							    if (response) {
+						        	window.location.href = response;
+						        	redirectWindow.location;
+						        }
+						   }
+						});
+						swal("Estado del pedido cambiado!","Listo","success");
+				   	}else{
+				   		combo.selectedIndex="0";
+				   	}
 			   });
 		}
 	div(class="container-fluid")
 		div(class="row" style="background: #4f6074;")
 			div(class="col-md-12 text-center") 
-				h2(style="color:white;") Especificaciones de diseño - Diseñador
+				h2(style="color:white;font-size:2em;") Especificación de diseño - Diseñador
 		div(class="container")
 			div(class="row" style="margin-top:3em;")
 				label(for="no_pedido" class="col-sm-2 control-label") No. pedido:
@@ -46,7 +50,7 @@ block content
 			div(class="row" style="margin-top:1em;")
 				label(class="col-sm-2 control-label") Fecha:
 				div(class="col-sm-4")
-					input(type="text" class="form-control " name="fecha" placeholder="Fecha" readonly value="#{pedido.fecha}" )
+					input(type="text" class="form-control " name="fecha" placeholder="Fecha" readonly value="#{new Date(pedido.fecha).getFullYear()}/#{new Date(pedido.fecha).getMonth()+1}/#{new Date(pedido.fecha).getDate()}" )
 			div(class="row" style="margin-top:3em;border-bottom: 1px solid #eeeeee;")
 				label(class="col-sm-3" style="") Modelos del pedido
 			div(class="row")
@@ -74,7 +78,7 @@ block content
 					div(class="form-group")
 						label(class="col-sm-2" style="") Estado del diseño:
 						div(class="col-sm-2 text-left")
-							select(class="form-control" onchange="cambiarEstado(#{pedido.no_pedido});" id="select_estado") 
+							select(class="form-control" onchange="cambiarEstado(#{pedido.no_pedido},this);" id="select_estado") 
 								-if(pedido.estado_disenio == "pendiente"){
 									option(selected value="pendiente") Pendiente
 									option(value="revision") Revision
@@ -87,6 +91,25 @@ block content
 								-}	
 					div(class="col-sm-12 text-right" style="margin-bottom:2em;")
 						a(href="/disenios/lista/" class="btn btn-info") Regresar
+
+	div(style="border-top:3em;")
+		p(style="color:white;") .
+	style().
+		.footer {
+		    position: fixed;
+		    bottom: 0;
+		    width: 100%;
+		    height: 10px;
+		    background: #f5f2f0;
+		    align: center;
+		    display: table;
+		    font-family: Helvetica, Arial, sans-serif;   
+		}
+	div(class="footer")
+		h1(style="font-size:1em;vertical-align: middle;text-align: center;") Interfaz 10 - Versatil
+			
+
+
 
 
 

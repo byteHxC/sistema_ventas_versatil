@@ -7,11 +7,29 @@ html(lang="es")
 		link(href="/css/style.css" rel="stylesheet")
 		link(href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet")
 		link(rel="stylesheet" href="/font-awesome/css/font-awesome.min.css")
+		style().
+			img{
+				vertical-align:middle;
+			}
+		script().
+			function over(){
+				var logo = document.getElementsByName('desc')[0];
+				logo.style.display="block";
+			}
+			function out(){
+				var logo = document.getElementsByName('desc')[0];
+				logo.style.display="none";
+			}
+			
+			
 	body
 		header(id="main-header" style="border-bottom:1px solid #cccccc;")
-			a(id="logo-header" href="#")
+			a(id="logo-header" style="text-center" onmouseover="over();" onmouseout="out();" href="/")
+				img(src="/img/Imagen_Banner.png" width="80px" height="60px" class="logo-header")
+
+			a(id="logo-header" name="desc" href="#" style="display:none;")
 				span(class="site-name") Versatil
-				sapn(class="site-desc") Sistema de ventas.
+				span(class="site-desc") Sistema de ventas.
 			nav()
 				ul
 					li
@@ -19,5 +37,6 @@ html(lang="es")
 					li
 						a(href="/logout/") Cerrar sesión
 		block content
+	
 	//- div(class="footer")
 	//- 	p Desarrollado en la materia de Gestión de proyectos de software ITChilpancigo

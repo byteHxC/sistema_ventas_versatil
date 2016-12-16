@@ -1,5 +1,8 @@
 extends ../layout
 block content
+	script(src="../../../sweet_alerts/dist/sweetalert.min.js")
+	link( rel="stylesheet" type="text/css" href="../../../sweet_alerts/dist/sweetalert.css")
+	
 	style().
 		html{
 			background-color: #ffffff;
@@ -29,6 +32,7 @@ block content
 				
 				return false;
 			}
+			swal({title: "Agregando modelo...",  type: "success",  text: "Redireccionando a lista de modelos",   timer: 1500,   showConfirmButton: false });
 			return true;
 		}
 	div(class="container")
@@ -49,7 +53,7 @@ block content
 							div(class="form-group")
 								label(for="Modelo" class="col-sm-2 control-label") Modelo:
 								div(class="col-sm-4")
-									input(type="number" class="form-control " name="id_modelo" placeholder="Numero de modelo" disabled)
+									input(type="number" class="form-control " name="id_modelo" placeholder="Numero de modelo" disabled value="#{id_modelo}")
 							div(class="form-group")
 								label(for="Descripcion" class="col-sm-2 control-label") Descripción:
 								div(class="col-sm-8")
@@ -65,5 +69,24 @@ block content
 										span(class="fa fa-plus-circle fo")   Agregar
 									a(href="/catalogo_lista" class="btn btn-danger")
 										span(class="fa fa-times-circle")   Cancelar
+
+	div(style="border-top:3em;")
+		p(style="color:white;") .
+	style().
+		.footer {
+		    position: fixed;
+		    bottom: 0;
+		    width: 100%;
+		    height: 10px;
+		    background: #f5f2f0;
+		    align: center;
+		    display: table;
+		    font-family: Helvetica, Arial, sans-serif;   
+		}
+	div(class="footer")
+		h1(style="font-size:1em;vertical-align: middle;text-align: center;") Interfaz 17 - Versatil
+			
+
+
 
 

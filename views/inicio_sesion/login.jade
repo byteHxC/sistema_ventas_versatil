@@ -5,7 +5,63 @@ html(lang="es")
 		link(href="/css/bootstrap.css" rel="stylesheet")
 		link(href="/css/bootstrap-theme.css" rel="stylesheet")
 		link(rel="stylesheet" href="/font-awesome/css/font-awesome.min.css")
-	body(style="padding-top:80px;")
+	style().
+		#main-header {
+			background: #4e6075;
+			color: white;
+			height: 80px;
+			width: 100%; 
+			left: 0; /* Posicionamos la cabecera al lado izquierdo */
+			top: 0; /* Posicionamos la cabecera pegada arriba */
+			/*position: fixed; /* Hacemos que la cabecera tenga una posición fija */
+		}	
+			#main-header a {
+				color: white;
+			}
+		 
+			/*
+			 * Logo
+			 */
+			#logo-header {
+				float: left;
+				padding: 15px 0 0 20px;
+				text-decoration: none;
+			}
+				#logo-header:hover {
+					color: #0b76a6;
+			/*		background-color: #a74544;
+			*/
+				}
+				
+				#logo-header .site-name {
+					display: block;
+					font-weight: 700;
+					font-size: 1.2em;
+				}
+				
+				#logo-header .site-desc {
+					display: block;
+					font-weight: 300;
+					font-size: 0.8em;
+					color: #999;
+				}	
+	script().
+			function over(){
+				var logo = document.getElementsByName('desc')[0];
+				logo.style.display="block";
+			}
+			function out(){
+				var logo = document.getElementsByName('desc')[0];
+				logo.style.display="none";
+			}	
+	body()
+		header(id="main-header" style="border-bottom:1px solid #cccccc;")
+			a(id="logo-header" style="text-center" onmouseover="over();" onmouseout="out();" href="/")
+				img(src="/img/Imagen_Banner.png" width="80px" height="60px" class="logo-header")
+
+			a(id="logo-header" name="desc" href="#" style="display:none;")
+				span(class="site-name") Versatil
+				span(class="site-desc") Sistema de ventas.
 		div(class="container")
 			div(class="col-sm-6 col-sm-offset-3")
 				h1 Iniciar sesión
@@ -25,6 +81,22 @@ html(lang="es")
 					button(type="submit" class="btn btn-success btn-lg fa fa-sign-in")   Iniciar sesión
 					//- button(type="button" onClick="window.open('/nota_venta/36/', 'popup', 'width=300,height=400');") aqui
 				hr
+	style().
+		.footer {
+		    position: fixed;
+		    bottom: 0;
+		    width: 100%;
+		    height: 2em;
+		    background: #f5f2f0;
+		    font-size:0.5em;
+		    align: center;
+		    display: table;
+		    font-family: Helvetica, Arial, sans-serif;   
+		}
+	div(class="footer")
+		h1(style="font-size:2em;vertical-align: middle;text-align: center;") Interfaz 2 - Versatil
+			
+
 
 
 

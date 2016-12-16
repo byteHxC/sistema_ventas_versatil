@@ -4,6 +4,10 @@ block content
 		html{
 			background-color: #f2f2f2;
 		}
+		a{
+			font-family: 'Raleway',Helvetica, Arial, sans-serif;
+		}
+
 	script(src="../../../sweet_alerts/dist/sweetalert.min.js")
 	link( rel="stylesheet" type="text/css" href="../../../sweet_alerts/dist/sweetalert.css")
 	script(src="../../../jquery/dist/jquery.min.js")
@@ -15,10 +19,28 @@ block content
 	script(src="../../../js/pikaday.js")
 	link( rel="stylesheet" type="text/css" href="../../../css/pikaday.css")
 
+	script(src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js")
+	link(href="http://codegena.com/assets/css/image-preview-for-link.css" rel="stylesheet") 
+	script(src="http://codegena.com/assets/js/image-preview-for-link.js")
+	script().
+		$(function() {
+			$('#p1 a').miniPreview({ prefetch: 'pageload'});
+		});
+	style().
+		.box{
+		    display: none;
+		    width: 100%;
+		}
+
+		a:hover + .box,.box:hover{
+		    display: block;
+		    position: relative;
+		    z-index: 100;
+		}
 	div(class="container-fluid")
 		div(class="row" style="background: #4f6074;")
 			div(class="col-md-12 text-center") 
-				h2(style="color:white;") Agregar pedido
+				h2(style="color:white;font-size:2em;") Agregar pedido - Empleado de mostrador
 		div(class="container" style="margin-bottom:2em;")
 			form(method="post" action="/pedido/add" class="form-horizontal")
 				div(class="alert alert-danger " role="alert" id="alert" hidden=true)
@@ -39,7 +61,26 @@ block content
 						label(class="col-sm-2 text-right" class="font18ligth" style="margin-top:1em;") Datos cliente
 						//- div(class="col-md-2 text-center")
 						a(class="fa fa-search btn btn-info" aria-hidden="true" style="background: #475668; border:none;margin-top:1em;margin-left:1em;" href="/clientes")  Buscar
-
+					-if(cliente.nombre){
+						-if(modelos.length > 0){
+							script().
+								swal({
+									title: "Modelos agregados.",
+									text: "...",
+									type: "success",
+									confirmButtonText: "Aceptar"
+								});
+						-}else{
+							script().
+								swal({
+									title: "Cliente agregado.",
+									text: "...",
+									type: "success",
+									confirmButtonText: "Aceptar"
+								});
+						-}
+						
+					-}
 					div(class="form-group" style="margin-top:1em;")
 						label(for="Nombre cliente" class="col-sm-2 control-label") Nombre:
 						div(class="col-sm-6")
@@ -58,7 +99,7 @@ block content
 						label(class="col-sm-2 text-right" class="font18ligth" style="margin-top:1em; margin-bottom:1em;") Datos pedido
 					div(class="row")
 						div(class="col-md-1 text-center")
-						a(type="button" class="fa fa-plus-circle fa-2x" aria-hidden="true" style="color: #475668; font-size:20px;margin-bottom:1em;" href="/seleccionar_modelos/#{cliente.id_cliente}/:filtro?/:valor?/" onclick="validarCliente(#{cliente.id_cliente});" id="link")   Agregar modelos
+						a(type="button" class="fa fa-plus-circle fa-2x"  aria-hidden="true" style="color: #475668; font-size:1.5em;margin-bottom:1em;" href="/seleccionar_modelos/#{cliente.id_cliente}/:filtro?/:valor?/" onclick="validarCliente(#{cliente.id_cliente});" id="link")   Agregar modelos
 					div(class="row")
 						div(class="col-sm-1")
 						div(class="col-sm-10")
@@ -66,6 +107,7 @@ block content
 								thead
 									tr
 										th(style="text-align:center;") Modelo
+										th(style="text-align:center;" hidden=true) Modelo_id
 										th(style="text-align:center;") Detalles
 										th(style="text-align:center;") Cantidad
 										th(style="text-align:center;") Precio_unitario
@@ -73,7 +115,10 @@ block content
 								tbody
 									each modelo in modelos
 										tr
-											td(style="text-align:center;" contenteditable=false) #{modelo.id_modelo}
+											td(style="text-align:center;" contenteditable=false) 
+												p(id="p1")
+													a(style="color:black;" href="/imagen/"+modelo.ruta_imagen) #{modelo.id_modelo}
+											td(hidden=true) #{modelo.id_modelo}
 											td(style="text-align:center;" contenteditable=true) 
 											td(style="text-align:center;" contenteditable=true charoff="number")
 											td(style="text-align:center;" contenteditable=false) #{modelo.precio_unitario}
@@ -104,14 +149,29 @@ block content
 							input( class="form-control" name="fecha_entrega" type="text" id="datepicker" readonly placeholder="Seleccione una fecha")
 							script().
 								var picker = new Pikaday({ field: document.getElementById('datepicker'), format: 'YYYY/MM/DD',minDate: new Date()});
-					div(class="form-group")
+					div(class="form-group" )
 						label(class="col-sm-2")
 						div(class="col-sm-10 text-right")
 							button(type="button" class="btn btn-success" onclick="registrarPedido();")
 								span(class="fa fa-plus-circle fo")    Registrar pedido
 							a(href="/redirect_user/" class="btn btn-danger")
 								span(class="fa fa-times-circle")   Cancelar
-
+	div(style="border-top:3em;")
+		p(style="color:white;") .
+	style().
+		.footer {
+		    position: fixed;
+		    bottom: 0;
+		    width: 100%;
+		    height: 10px;
+		    background: #f5f2f0;
+		    align: center;
+		    display: table;
+		    font-family: Helvetica, Arial, sans-serif;   
+		}
+	div(class="footer")
+		h1(style="font-size:1em;vertical-align: middle;text-align: center;") Interfaz 4 - Versatil
+			
 
 
 

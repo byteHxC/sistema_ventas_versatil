@@ -47,6 +47,11 @@ require('./config/passport')(passport);
 // Router 
 var router = express.Router();
 
+// acerca de
+
+router.get('/acerca_de/', function(req, res){
+    res.render('acerca_de');
+});
 // root page
 router.get('/',function(req, res){
 	res.render('index', {authenticate: req.isAuthenticated()});
@@ -93,10 +98,10 @@ router.get('/catalogo_lista/:filtro?/',isLoggedIn, function(req, res){
             res.render('administrador/catalogo',{modelos: json});
         });
     }else{
+
         connectionMySql.query("SELECT * FROM `modelos`",function(err,rows){
             console.log('GET /catalogo/')
             var json = JSON.parse(JSON.stringify(rows));
-            // console.log(json)
             res.render('administrador/catalogo',{modelos: json});
         });
     }
@@ -106,7 +111,10 @@ router.get('/catalogo_lista/:filtro?/',isLoggedIn, function(req, res){
 router.route('/catalogo/add/')
     .get(isLoggedIn, function(req, res){
         console.log('GET /catalogo/add')
-        res.render('administrador/addModelo')
+        connectionMySql.query("select auto_increment from information_schema.TABLES WHERE  table_name like 'modelos';",function(error, rows){
+            var id_modelo = JSON.parse(JSON.stringify(rows))[1].auto_increment;
+            res.render('administrador/addModelo',{id_modelo: id_modelo})
+       }); 
     })
     .post(isLoggedIn,upload_image.single('imagen'),function(req, res){
         console.log("POST /catalogo/add");
@@ -114,6 +122,7 @@ router.route('/catalogo/add/')
         connectionMySql.query('INSERT INTO `modelos` (`precio_unitario`, `ruta_imagen`, `descripcion`) VALUES (?, ?, ?)', data, function(error){
             if(error){
                 console.log(error.message);
+                res.redirect('/catalogo_lista')
             }else{
                 res.redirect('/catalogo_lista')
             }
@@ -138,6 +147,7 @@ router.route('/catalogo/:id_modelo')
         connectionMySql.query('UPDATE modelos set descripcion=?,precio_unitario=? where id_modelo = ?',[req.body.descripcion,req.body.precio_unitario, req.params.id_modelo], function(error){
             if(error){
                 console.log(error.message);
+                res.redirect(400, '/catalogo_lista')
             }else{
                 res.redirect('/catalogo_lista')
             }
@@ -148,6 +158,7 @@ router.route('/catalogo/:id_modelo')
         connectionMySql.query('DELETE from modelos where id_modelo=?',[req.params.id_modelo], function(error){
             if(error){
                 console.log(error.message);
+                res.redirect(400, '/catalogo_lista');
             }else{
                 res.redirect('/catalogo_lista')
             }
@@ -548,7 +559,7 @@ router.route('/disenio/:no_pedido/:estado?')
 // Lista de facturas a realizar
 router.get('/factura/lista/', isLoggedIn, function(req, res){
     // mandar las factoruas de la base de datos
-    // select *from pedidos where factura=0;
+    // select * from pedidos where factura=0;
     console.log('GET /factura/lista/');
     connectionMySql.query("select *from pedidos where factura=0;",function(error, rows){
         var pedidos = JSON.parse(JSON.stringify(rows));
@@ -590,6 +601,7 @@ router.get('/factura_pdf/:filename/', isLoggedIn, function(req, res){
     });
 });
 
+
 router.get('/send/factura_pdf/:filename/:correo/:no_pedido', isLoggedIn, function(req, res){
     console.log('GET /send/factura_pdf/:filename/:correo/:no_pedido');
     console.log(req.params);
@@ -610,6 +622,11 @@ router.get('/send/factura_pdf/:filename/:correo/:no_pedido', isLoggedIn, functio
             res.redirect('/redirect_user');
         };
     });
+});
+
+router.get('/imagen/:ruta_imagen/', function(req, res){
+    console.log('imagen ' + req.params.ruta_imagen);
+    res.render('image',{ruta_imagen: '/' + req.params.ruta_imagen});
 });
 
 

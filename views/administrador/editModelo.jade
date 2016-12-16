@@ -7,6 +7,9 @@ block content
 	script(src="../../../sweet_alerts/dist/sweetalert.min.js")
 	link( rel="stylesheet" type="text/css" href="../../../sweet_alerts/dist/sweetalert.css")
 	script().
+		function act(){
+			swal("Modelo actualizado", "Cambio exitoso", "success")
+		}
 		function validar(form){
 			var message = "";
 			if(form.descripcion.value.length == 0){
@@ -19,6 +22,7 @@ block content
 				message += "- El precio debe ser numerico positivo ejemplo: [10.5]."
 			}
 			if(message==""){
+				swal({title: "Modelo actualizado",  type: "success",  text: "Redireccionando a lista de modelos...",   timer: 1500,   showConfirmButton: false });
 				return true;
 			}else{
 				sweetAlert("Erorr de validación", message, "error");
@@ -28,8 +32,8 @@ block content
 		}
 	div(class="container")
 		div(class="panel panel-warning" style="margin-top:0.5em;")
-				div(class="panel-heading")
-					h1(class="planel-title" style="font-size: 25px;text-align:center;") Editar modelo
+				div(class="panel-heading" style="background:#4f6074;")
+					h1(class="planel-title" style="font-size: 2em;color:white;text-align:center;") Editar modelo
 				div(class="panel-body" style="background:#f2f2f2;")
 						div(class="text-center")
 							img(src="../#{modelo[0].ruta_imagen}" class="model"  style="margin-bottom:2em; width:230px; height:230px;")
@@ -49,7 +53,26 @@ block content
 							div(class="form-group")
 								label(class="col-sm-2")
 								div(class="col-sm-3")
-									button(type="submit" class="btn btn-success")
-										span(class="fa fa-pencil-square-o" aria-hidden="true" )  Actualizar
+									button(type="submit" class="btn btn-success" onsubmit="act();")
+										span(class="fa fa-pencil-square-o" aria-hidden="true")  Actualizar
 									a(href="/catalogo_lista" class="btn btn-danger")
 										span(class="fa fa-times-circle")  Cancelar
+
+	div(style="border-top:3em;")
+		p(style="color:white;") .
+	style().
+		.footer {
+		    position: fixed;
+		    bottom: 0;
+		    width: 100%;
+		    height: 10px;
+		    background: #f5f2f0;
+		    align: center;
+		    display: table;
+		    font-family: Helvetica, Arial, sans-serif;   
+		}
+	div(class="footer")
+		h1(style="font-size:1em;vertical-align: middle;text-align: center;") Interfaz 16 - Versatil
+			
+
+

@@ -6,8 +6,8 @@ block content
 		}
 	div(class="container")
 		div(class="panel panel-success" style="margin-top:0.5em;")
-				div(class="panel-heading" style="")
-					h1(class="planel-title" style="font-size: 25px;text-align:center;") Seleccionar cliente
+				div(class="panel-heading" style="background:#4f6074;color-white;")
+					h1(class="planel-title" style="font-size: 25px;text-align:center;color:white;") Seleccionar cliente
 				div(class="panel-body")
 					div(class="row")
 						label(class="col-sm-2") Filtro por nombre:
@@ -33,3 +33,21 @@ block content
 										td(style="text-align:center;" contenteditable=false) #{cliente.correo}
 										td(style="text-align:center;")
 											a(href="/cliente_seleccionado/#{cliente.id_cliente}" style="color:white;" class="btn btn-success fa fa-user-plus")  Seleccionar
+
+	div(style="border-top:3em;")
+		p(style="color:white;") .
+	style().
+		.footer {
+		    position: fixed;
+		    bottom: 0;
+		    width: 100%;
+		    height: 10px;
+		    background: #f5f2f0;
+		    align: center;
+		    display: table;
+		    font-family: Helvetica, Arial, sans-serif;   
+		}
+	div(class="footer")
+		h1(style="font-size:1em;vertical-align: middle;text-align: center;") Interfaz 5 - Versatil
+			
+

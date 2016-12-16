@@ -2,7 +2,7 @@ extends ../layout
 block content
 	div(class="container-fluid" style="border:none;")
 		div(class="row header text-center")
-			h1(style="color:white; font-size:1em;") Versatil - Empleado de mostrador
+			h1(style="color:white; font-size:2em;") Versatil - Empleado de mostrador
 		div(class="row contenido")
 			div(class="col-md-4 ")
 			div(class="col-md-4 center-block")
@@ -13,3 +13,21 @@ block content
 					img(src="/icons/list.png" class="icon")
 					a(href="/pedidos/pendientes/") Lista de pedidos
 			div(class="col-md-4")
+	style().
+		.footer {
+		    position: fixed;
+		    bottom: 0;
+		    width: 100%;
+		    height: 10px;
+		    background: #f5f2f0;
+		    align: center;
+		    display: table;
+		    font-family: Helvetica, Arial, sans-serif;   
+		}
+	div(class="footer")
+		h1(style="font-size:1em;vertical-align: middle;text-align: center;") Interfaz 3 - Versatil
+			
+
+
+
+

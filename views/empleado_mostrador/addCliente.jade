@@ -5,12 +5,19 @@ block content
 			background-color: #ffffff;
 		}
 	script().
+		function desplegar(){
+			if(document.getElementById('data-facturacion').style.display == "block"){
+				document.getElementById('data-facturacion').style.display="none";
+			}else{
+				document.getElementById('data-facturacion').style.display="block";
+			}
+		}
 		function validarCliente(form){
 			var messages = "";
 			if(!(form.nombre.value.length > 0)){
 				messages += "- El nombre es obligatorio.\n"
 			}
-			if(!(/^\w+@\w+\.\w{2,4}$/.test(form.correo.value))){
+			if(!(/^(\w|[.])+@\w+\.\w{2,4}$/.test(form.correo.value))){
 				messages += "- El correo esta mal escrito\n"
 			}
 			if(!(/^\d{5,15}$/.test(form.telefono.value))){
@@ -32,7 +39,7 @@ block content
 			if(form.no_int.value != ""  & !(/^\d{1,5}$/.test(form.no_int.value))){
 				messages += "- Verificar el numero exterior, rango de [1,5] digitos.\n"
 			}
-			if(form.codigo_postal.value.length != "" & !(/^\d[5]$/.test(form.codigo_postal.value))){
+			if(form.codigo_postal.value.length != "" & !(/^\d{5}$/.test(form.codigo_postal.value))){
 				messages += "- El código postal debe tener 5 digitos .\n"
 			}
 			if(messages == ""){
@@ -46,7 +53,7 @@ block content
 	div(class="container")
 		div(class="panel panel-primary" style="margin-top:0.5em;")
 				div(class="panel-heading" style="background:#4e6073;")
-					h1(class="planel-title" style="font-size: 25px;text-align:center;") Agregar cliente
+					h1(class="planel-title" style="font-size: 2em;text-align:center;") Agregar cliente
 				div(class="panel-body" style="background:#f2f2f2;")
 						form(method="post" action="/cliente/add" class="form-horizontal" onsubmit=('return validarCliente(this);') )
 							div(class="alert alert-danger " role="alert" id="alert" hidden=true)
@@ -65,51 +72,74 @@ block content
 								label(for="telefono" class="col-sm-2 control-label text-left") Telefono*:
 								div(class="col-sm-4" )
 									input(type="tel" class="text-left form-control " name="telefono" placeholder="Telefono")
-							
-							div(class="form-group")
-								label(for="rfc cliente" class="col-sm-2 control-label") RFC:
-								div(class="col-sm-4")
-									input(type="text" class="form-control " name="rfc" placeholder="RFC")
-							div(class="form-group")
-								label(for="curp cliente" class="col-sm-2 control-label text-left") CURP:
-								div(class="col-sm-4")
-									input(type="text" class="text-left form-control " name="curp" placeholder="Curp")
-							div(class="form-group")
-								label(for="calle cliente" class="col-sm-2 control-label") Calle:
-								div(class="col-sm-4")
-									input(type="text" class="form-control " name="calle" placeholder="Calle")
-							div(class="form-group")
-								label(for="no_ext cliente" class="col-sm-2 control-label text-left") No. exterior:
-								div(class="col-sm-2")
-									input(type="text" class="text-left form-control " name="no_ext" placeholder="Numero exterior")
-							div(class="form-group")
-								label(for="no_int cliente" class="col-sm-2 control-label text-left") No. interior:
-								div(class="col-sm-2")
-									input(type="text" class="text-left form-control" name="no_int" placeholder="Numero interior")
-							div(class="form-group")
-								label(for="colinia cliente" class="col-sm-2 control-label") Colonia:
-								div(class="col-sm-4")
-									input(type="text" class="form-control " name="colonia" placeholder="Colonia")
-							div(class="form-group")
-								label(for="codigo postal cliente" class="col-sm-2 control-label text-left") Código postal:
-								div(class="col-sm-4")
-									input(type="text" class="text-left form-control " name="codigo_postal" placeholder="Código postal")
-							div(class="form-group")
-								label(for="localidad cliente" class="col-sm-2 control-label") Localidad:
-								div(class="col-sm-4")
-									input(type="text" class="form-control " name="localidad" placeholder="Localidad")
-							div(class="form-group")
-								label(for="Municipio cliente" class="col-sm-2 control-label text-left") Municipio:
-								div(class="col-sm-4")
-									input(type="text" class="text-left form-control " name="municipio" placeholder="municipio")
-							div(class="form-group")
-								label(for="estado cliente" class="col-sm-2 control-label") Estado:
-								div(class="col-sm-4")
-									input(type="text" class="form-control " name="estado" placeholder="Estado")
+							div(class="form-group" style="margin-top:2em;")
+								label(class="col-sm-1")
+								div(class="col-sm-10 text-right")
+									button(type="button" style="background-color:#4f6074;color:white;" class=" fa fa-bars form-control btn" onclick="desplegar();")   Campos para facturación
+							div(style="display: none;" id="data-facturacion")
+								div(class="form-group")
+									label(for="rfc cliente" class="col-sm-2 control-label") RFC:
+									div(class="col-sm-4")
+										input(type="text" class="form-control " name="rfc" placeholder="RFC")
+								div(class="form-group")
+									label(for="curp cliente" class="col-sm-2 control-label text-left") CURP:
+									div(class="col-sm-4")
+										input(type="text" class="text-left form-control " name="curp" placeholder="Curp")
+								div(class="form-group")
+									label(for="calle cliente" class="col-sm-2 control-label") Calle:
+									div(class="col-sm-4")
+										input(type="text" class="form-control " name="calle" placeholder="Calle")
+								div(class="form-group")
+									label(for="no_ext cliente" class="col-sm-2 control-label text-left") No. exterior:
+									div(class="col-sm-2")
+										input(type="text" class="text-left form-control " name="no_ext" placeholder="Numero exterior")
+								div(class="form-group")
+									label(for="no_int cliente" class="col-sm-2 control-label text-left") No. interior:
+									div(class="col-sm-2")
+										input(type="text" class="text-left form-control" name="no_int" placeholder="Numero interior")
+								div(class="form-group")
+									label(for="colinia cliente" class="col-sm-2 control-label") Colonia:
+									div(class="col-sm-4")
+										input(type="text" class="form-control " name="colonia" placeholder="Colonia")
+								div(class="form-group")
+									label(for="codigo postal cliente" class="col-sm-2 control-label text-left") Código postal:
+									div(class="col-sm-4")
+										input(type="text" class="text-left form-control " name="codigo_postal" placeholder="Código postal")
+								div(class="form-group")
+									label(for="localidad cliente" class="col-sm-2 control-label") Localidad:
+									div(class="col-sm-4")
+										input(type="text" class="form-control " name="localidad" placeholder="Localidad")
+								div(class="form-group")
+									label(for="Municipio cliente" class="col-sm-2 control-label text-left") Municipio:
+									div(class="col-sm-4")
+										input(type="text" class="text-left form-control " name="municipio" placeholder="municipio")
+								div(class="form-group")
+									label(for="estado cliente" class="col-sm-2 control-label") Estado:
+									div(class="col-sm-4")
+										input(type="text" class="form-control " name="estado" placeholder="Estado")
 							div(class="form-group" style="margin-top:2em;")
 								label(class="col-sm-2")
-								div(class="col-sm-2")
+								div(class="col-sm-8 text-right")
 									button(type="submit" class="btn btn-success")
 										span(class="fa fa-user-plus" aria-hidden="true")   Registrar cliente
 								a(href="/pedido/add" class="btn btn-danger")
 									span(class="fa fa-times-circle")   Cancelar
+
+	div(style="border-top:3em;")
+		p(style="color:white;") .
+	style().
+		.footer {
+		    position: fixed;
+		    bottom: 0;
+		    width: 100%;
+		    height: 10px;
+		    background: #f5f2f0;
+		    align: center;
+		    display: table;
+		    font-family: Helvetica, Arial, sans-serif;   
+		}
+	div(class="footer")
+		h1(style="font-size:1em;vertical-align: middle;text-align: center;") Interfaz 6 - Versatil
+			
+
+
